@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent> <!-- parent POM -->
+    <parent>
         <groupId>uk.ac.ebi.pride.maven</groupId>
         <artifactId>pride-base-master</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>uk.ac.ebi.pride</groupId>
@@ -39,6 +39,7 @@
         <prider.repo.version>0.1.12</prider.repo.version>
         <prider.data.provider.api.version>1.1.3-SNAPSHOT</prider.data.provider.api.version>
         <solrj.version>4.0.0</solrj.version>
+        <spring.test.version>4.0.2.RELEASE</spring.test.version>
         <!--<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>-->
     </properties>
 
@@ -146,6 +147,12 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.test.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>

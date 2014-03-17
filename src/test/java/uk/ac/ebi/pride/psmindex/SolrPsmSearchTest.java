@@ -15,12 +15,20 @@ import org.apache.solr.common.params.SolrParams;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import uk.ac.ebi.pride.psmindex.search.model.Psm;
+import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
+import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
+import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
 
 public class SolrPsmSearchTest extends SolrTestCaseJ4 {
 
 
+    private static final String PSM_1_ID = "PSM-1-ID";
     private SolrServer server;
     private SolrPsmRepositoryFactory solrPsmRepositoryFactory;
 
@@ -35,15 +43,32 @@ public class SolrPsmSearchTest extends SolrTestCaseJ4 {
     }
 
 
-
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
         server = new EmbeddedSolrServer(h.getCoreContainer(), h.getCore().getName());
-        server.deleteByQuery("*:*");
 
         solrPsmRepositoryFactory = new SolrPsmRepositoryFactory(new SolrTemplate(server));
+
+        // delete all data
+        deleteAllData();
+        // insert test data
+        insertTestData();
+    }
+
+    private void deleteAllData() {
+        PsmIndexService psmIndexService = new PsmIndexService(solrPsmRepositoryFactory.create());
+        psmIndexService.deleteAll();
+    }
+
+    private void insertTestData() {
+        PsmIndexService psmIndexService = new PsmIndexService(solrPsmRepositoryFactory.create());
+
+        Psm psm = new Psm();
+        psm.setId(PSM_1_ID);
+        psmIndexService.save(psm);
+
     }
 
     @Test
@@ -52,6 +77,8 @@ public class SolrPsmSearchTest extends SolrTestCaseJ4 {
         QueryResponse response = server.query(params);
         assertEquals(ZERO_DOCS, response.getResults().getNumFound());
     }
+
+
 
 
 }
