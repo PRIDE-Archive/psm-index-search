@@ -25,10 +25,28 @@ import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
 
-public class SolrPsmSearchTest extends SolrTestCaseJ4 {
+import java.util.List;
 
+public class PsmServiceTest extends SolrTestCaseJ4 {
 
-    private static final String PSM_1_ID = "PSM-1-ID";
+    /**
+     * PSM 1 test data
+     */
+    private static final String PSM_1_ID = "TEST-PSM-ID1";
+
+    /**
+     * PSM 2 test data
+     */
+    private static final String PSM_2_ID = "TEST-PSM-ID2";
+
+    /**
+     * PSM 3 test data
+     */
+    private static final String PSM_3_ID = "TEST-PSM-ID3";
+
+    private static final int NUM_TEST_PSMS = 3;
+    private static final String PSM_ID_PREFIX = "TEST-PSM-ID";
+
     private SolrServer server;
     private SolrPsmRepositoryFactory solrPsmRepositoryFactory;
 
@@ -66,8 +84,10 @@ public class SolrPsmSearchTest extends SolrTestCaseJ4 {
         PsmIndexService psmIndexService = new PsmIndexService(solrPsmRepositoryFactory.create());
 
         Psm psm = new Psm();
-        psm.setId(PSM_1_ID);
-        psmIndexService.save(psm);
+        for (int i=0;i<NUM_TEST_PSMS;i++) {
+            psm.setId(PSM_ID_PREFIX + i);
+            psmIndexService.save(psm);
+        }
 
     }
 
@@ -78,7 +98,28 @@ public class SolrPsmSearchTest extends SolrTestCaseJ4 {
         assertEquals(ZERO_DOCS, response.getResults().getNumFound());
     }
 
+    @Test
+    public void testSearchById() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
+        List<Psm> psms = psmSearchService.findById(PSM_1_ID);
 
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID,psm1.getId());
+    }
+
+    @Test
+    public void testSearchByIdWildcard() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findById(PSM_ID_PREFIX+"*");
+
+        assertNotNull(psms);
+        assertEquals(NUM_TEST_PSMS, psms.size());
+
+    }
 
 }
