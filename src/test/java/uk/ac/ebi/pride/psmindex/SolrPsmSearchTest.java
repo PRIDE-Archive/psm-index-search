@@ -16,9 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.solr.core.SolrTemplate;
-import uk.ac.ebi.pride.psmindex.search.search.repository.SolrPsmRepositoryFactory;
-
-import java.util.*;
+import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
 
 public class SolrPsmSearchTest extends SolrTestCaseJ4 {
 

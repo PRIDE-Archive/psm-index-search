@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.psmindex.search.search.repository;
+package uk.ac.ebi.pride.psmindex.search.service.repository;
 
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;

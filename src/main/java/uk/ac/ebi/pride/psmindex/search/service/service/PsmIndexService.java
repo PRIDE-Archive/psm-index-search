@@ -1,8 +1,8 @@
-package uk.ac.ebi.pride.psmindex.search.search.service;
+package uk.ac.ebi.pride.psmindex.search.service.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
-import uk.ac.ebi.pride.psmindex.search.search.repository.SolrPsmRepository;
+import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 
 /**
  * @author Jose A. Dianes
