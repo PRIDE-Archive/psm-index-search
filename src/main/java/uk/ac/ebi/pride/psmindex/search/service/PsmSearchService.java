@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.psmindex.search.service.service;
+package uk.ac.ebi.pride.psmindex.search.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
