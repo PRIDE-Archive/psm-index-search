@@ -31,7 +31,8 @@
 
     <scm>
         <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/ontology-index-search/trunk</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/ontology-index-search/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride_r/ontology-index-search/trunk
+        </developerConnection>
         <url>https://svn.ebi.ac.uk/pride-repo/pride_r/ontology-index-search/trunk</url>
     </scm>
 
@@ -163,7 +164,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-solr</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>1.1.1.RELEASE</version>
         </dependency>
 
         <!--SolrJ-->
@@ -183,6 +184,13 @@
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-repo</artifactId>
             <version>${prider.repo.version}</version>
+        </dependency>
+
+        <!-- pride utils-->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.prider</groupId>
+            <artifactId>prider-utils</artifactId>
+            <version>0.1.4</version>
         </dependency>
 
         <dependency>
