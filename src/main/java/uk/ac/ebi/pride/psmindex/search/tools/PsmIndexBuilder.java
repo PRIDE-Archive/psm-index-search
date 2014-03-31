@@ -54,7 +54,7 @@ public class PsmIndexBuilder {
 
         // reset index
         psmIndexBuilder.psmIndexService.deleteAll();
-        logger.info("All psms are now DELETED");
+        logger.info("All PSMs are now DELETED");
 
         // create the indexer
         ProjectPsmsIndexer projectPsmsIndexer = new ProjectPsmsIndexer(psmIndexBuilder.psmSearchService, psmIndexBuilder.psmIndexService);

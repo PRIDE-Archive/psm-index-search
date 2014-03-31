@@ -31,10 +31,10 @@ public class MzTabDataProviderReader {
      * mzTab files in the directory will have names such as PRIDE_Exp_Complete_Ac_28654.submissions. We are interested in the
      * assay accession, the last bit if we split by '_'.
      *
-     * @return A map of assay accessions to peptide identifications
+     * @return A map of assay accessions to PSMs
      * @throws java.io.IOException
      */
-    public static Map<String, LinkedList<Psm>> readPsmsFromMzTabFilesDirectory(File mzTabFilesDirectory) throws IOException, MZTabException {
+    public static Map<String, LinkedList<Psm>> readPsmsFromMzTabFilesDirectory(String projectAccession, File mzTabFilesDirectory) throws IOException, MZTabException {
 
         Map<String, LinkedList<Psm>> res = new HashMap<String, LinkedList<Psm>>();
 
@@ -50,9 +50,9 @@ public class MzTabDataProviderReader {
                     String assayAccession = tabFile.getName().split("[_\\.]")[4];
 
                     // get all psms from the file
-                    LinkedList<Psm> assayPsms = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs());
+                    LinkedList<Psm> assayPsms = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), projectAccession, assayAccession);
 
-                    // add assay proteins to the result
+                    // add assay psms to the result
                     res.put(assayAccession, assayPsms);
                     logger.debug("Found " + assayPsms.size() + " psms for Assay " + assayAccession + " in file " + tabFile.getAbsolutePath());
                 } else {
@@ -65,10 +65,23 @@ public class MzTabDataProviderReader {
         return res;
     }
 
-    private static LinkedList<Psm> convertFromMzTabPsmsToPrideArchivePsms(Collection<PSM> mzTabPsms) {
+    private static LinkedList<Psm> convertFromMzTabPsmsToPrideArchivePsms(Collection<PSM> mzTabPsms, String projectAccession, String assayAccession) {
 
-        //TODO
-       return null;
+        LinkedList<Psm> res = new LinkedList<Psm>();
+
+        for (PSM filePsm: mzTabPsms) {
+            Psm newPsm = new Psm();
+            // TODO: set PSM id
+            newPsm.setPepSequence(filePsm.getSequence());
+            newPsm.setProjectAccession(projectAccession);
+            newPsm.setAssayAccession(assayAccession);
+            newPsm.setProteinAccession(filePsm.getAccession());
+            // TODO - more fields to come
+
+            res.add(newPsm);
+        }
+
+        return res;
     }
 
     private static void updatePsm(Psm psm, PSM mzTabPsm) {

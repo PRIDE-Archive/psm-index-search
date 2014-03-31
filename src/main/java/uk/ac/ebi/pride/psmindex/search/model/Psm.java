@@ -22,14 +22,14 @@ public class Psm {
     @Field(PsmFields.SPECTRUM_ID)
     private String spectrumId;
 
-    @Field(PsmFields.PROTEIN_ACCESSIONS)
-    private Set<String> proteinAccessions;
+    @Field(PsmFields.PROTEIN_ACCESSION)
+    private String proteinAccession;
 
-    @Field(PsmFields.PROJECT_ACCESSIONS)
-    private Set<String> projectAccessions;
+    @Field(PsmFields.PROJECT_ACCESSION)
+    private String projectAccession;
 
-    @Field(PsmFields.ASSAY_ACCESSIONS)
-    private Set<String> assayAccessions;
+    @Field(PsmFields.ASSAY_ACCESSION)
+    private String assayAccession;
 
     //At this moment it stores (position, {mod_accession,mod_name})
     @Field(PsmFields.MODS_WITH_LOCATIONS)
@@ -64,28 +64,28 @@ public class Psm {
         this.spectrumId = spectrumId;
     }
 
-    public Set<String> getProteinAccessions() {
-        return proteinAccessions;
+    public String getProteinAccession() {
+        return proteinAccession;
     }
 
-    public void setProteinAccessions(Set<String> proteinAccessions) {
-        this.proteinAccessions = proteinAccessions;
+    public void setProteinAccession(String proteinAccession) {
+        this.proteinAccession = proteinAccession;
     }
 
-    public Set<String> getProjectAccessions() {
-        return projectAccessions;
+    public String getProjectAccession() {
+        return projectAccession;
     }
 
-    public void setProjectAccessions(Set<String> projectAccessions) {
-        this.projectAccessions = projectAccessions;
+    public void setProjectAccession(String projectAccession) {
+        this.projectAccession = projectAccession;
     }
 
-    public Set<String> getAssayAccessions() {
-        return assayAccessions;
+    public String getAssayAccession() {
+        return assayAccession;
     }
 
-    public void setAssayAccessions(Set<String> assayAccessions) {
-        this.assayAccessions = assayAccessions;
+    public void setAssayAccession(String assayAccession) {
+        this.assayAccession = assayAccession;
     }
 
     public Map<String, List<String>> getModsAccessions() {

@@ -9,9 +9,9 @@ public class PsmFields {
     public static final String ID = "id";
     public static final String PEP_SEQUENCE = "peptide_sequence";
     public static final String SPECTRUM_ID = "spectrum_id";
-    public static final String PROTEIN_ACCESSIONS = "protein_accessions";
-    public static final String PROJECT_ACCESSIONS = "project_accessions";
-    public static final String ASSAY_ACCESSIONS = "assay_accessions";
+    public static final String PROTEIN_ACCESSION = "protein_accession";
+    public static final String PROJECT_ACCESSION = "project_accession";
+    public static final String ASSAY_ACCESSION = "assay_accession";
     public static final String MODS_WITH_LOCATIONS = "*_pos";
     public static final String SPECIES = "*_species";
 

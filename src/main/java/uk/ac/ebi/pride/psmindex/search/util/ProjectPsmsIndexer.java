@@ -34,11 +34,11 @@ public class ProjectPsmsIndexer {
 
         startTime = System.currentTimeMillis();
 
-        // build protein identifications from mzTabFiles
+        // build PSMs from mzTabFiles
         try {
             if (pathToMzTabFiles != null) {
                 File generatedDirectory = new File(pathToMzTabFiles);
-                psms = MzTabDataProviderReader.readPsmsFromMzTabFilesDirectory(generatedDirectory);
+                psms = MzTabDataProviderReader.readPsmsFromMzTabFilesDirectory(projectAccession, generatedDirectory);
                 logger.debug("Found " + getTotalPsmsCount(psms) + " psms in directory " + pathToMzTabFiles);
             }
         } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
@@ -50,52 +50,23 @@ public class ProjectPsmsIndexer {
         endTime = System.currentTimeMillis();
         logger.info("DONE getting psms from file for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
-        //add all proteins
+        // add all PSMs to index
         logger.info("Adding psms to index for project " + projectAccession);
         startTime = System.currentTimeMillis();
 
         for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> assayPsms : psms.entrySet()) {
             Map<String, Psm> psmsToIndex = new HashMap<String, Psm>();
 
-            //TODO -->
             for (Psm psm : assayPsms.getValue()) {
                 try {
+                    // add to save
+                    psmsToIndex.put(psm.getId(), psm);
 
-                    // check for existing protein - WE NEED TO REPLACE ':' characters IF ANY
-                    List<Psm> psmsFromIndex =  psmSearchService.findById(psm.getId());
-                    if (psmsFromIndex != null && psmsFromIndex.size() > 0) {
-                        // get the existing protein
-                        Psm psmFromIndex = psmsFromIndex.get(0);
-                        // add new project accession
-                        psmFromIndex.getProjectAccessions().add(projectAccession);
-                        // add new assay accession
-                        psmFromIndex.getAssayAccessions().add(assayPsms.getKey());
-                        // add to save
-                        psmsToIndex.put(psmFromIndex.getId(), psmFromIndex);
-
-                        logger.debug(
-                                "UPDATED protein " + psm.getId() +
-                                        " from PROJECT:" + projectAccession +
-                                        " ASSAY:" + assayPsms.getKey()
-                        );
-                    } else {
-                        // set the project accessions
-                        psm.setProjectAccessions(
-                                new TreeSet<String>(Arrays.asList(projectAccession))
-                        );
-                        // set assay accessions
-                        psm.setAssayAccessions(
-                                new TreeSet<String>(Arrays.asList(assayPsms.getKey()))
-                        );
-                        // add to save
-                        psmsToIndex.put(psm.getId(), psm);
-
-                        logger.debug(
-                                "ADDED PSM " + psm.getId() +
-                                        " from PROJECT:" + projectAccession +
-                                        " ASSAY:" + assayPsms.getKey()
-                        );
-                    }
+                    logger.debug(
+                            "ADDED PSM " + psm.getId() +
+                                    " from PROJECT:" + projectAccession +
+                                    " ASSAY:" + assayPsms.getKey()
+                    );
                 } catch (Exception e) {
                     logger.error("PSM " + psm.getId() + " caused an error");
                     logger.error("ASSAY " + assayPsms.getKey());
@@ -103,27 +74,17 @@ public class ProjectPsmsIndexer {
                     e.printStackTrace();
                 }
 
-                //TODO <--
             }
 
 
-            // get all the synonyms for the proteins to index
-            long startTime2 = System.currentTimeMillis();
-            long endTime2 = System.currentTimeMillis();
-            logger.info("DONE getting all synonyms for assay " + assayPsms.getKey() + " in project " + projectAccession + " in " + (double) (endTime2 - startTime2) / 1000.0 + " seconds");
-
-            // save all assay identifications
-            startTime2 = System.currentTimeMillis();
             psmIndexService.save(psmsToIndex.values());
-            endTime2 = System.currentTimeMillis();
             logger.debug("COMMITTED " + psmsToIndex.size() +
                     " psms from PROJECT:" + projectAccession +
-                    " ASSAY:" + assayPsms.getKey() +
-                    " in " + (double) (endTime2 - startTime2) / 1000.0 + " seconds");
+                    " ASSAY:" + assayPsms.getKey());
         }
 
         endTime = System.currentTimeMillis();
-        logger.info("DONE indexing all psms for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
+        logger.info("DONE indexing all PSMs for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
     }
 
