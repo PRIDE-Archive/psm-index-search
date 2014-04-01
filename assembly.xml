@@ -32,11 +32,6 @@
                 <exclude>**/*</exclude>
             </excludes>
         </fileSet>
-        <!--<fileSet>-->
-            <!--<directory>${project.basedir}/script</directory>-->
-            <!--&lt;!&ndash;<outputDirectory>${assembly.dir}</outputDirectory>&ndash;&gt;-->
-            <!--<outputDirectory>/</outputDirectory>-->
-            <!--<filtered>true</filtered>-->
-        <!--</fileSet>-->
+
     </fileSets>
 </assembly>

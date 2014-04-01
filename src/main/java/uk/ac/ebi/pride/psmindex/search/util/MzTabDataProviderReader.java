@@ -71,7 +71,14 @@ public class MzTabDataProviderReader {
 
         for (PSM filePsm: mzTabPsms) {
             Psm newPsm = new Psm();
-            // TODO: set PSM id
+            newPsm.setId(
+                      projectAccession + "_"
+                    + assayAccession + "_"
+                    + filePsm.getPSM_ID() + "_"
+                    + filePsm.getAccession() + "_"
+                    + filePsm.getSequence()
+            );
+            newPsm.setSpectrumId("TODO"); // TODO
             newPsm.setPepSequence(filePsm.getSequence());
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
