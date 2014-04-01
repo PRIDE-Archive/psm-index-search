@@ -36,35 +36,44 @@ public class PsmSearchService {
         return solrPsmRepository.findByIdIn(ids);
     }
 
-    //Sequence query methods
-    public List<Psm> findByPepSequence(String pepSequence) {
-        return solrPsmRepository.findByPepSequence(pepSequence);
+    // Sequence query methods
+    public List<Psm> findByPeptideSequence(String peptideSequence) {
+        return solrPsmRepository.findByPeptideSequence(peptideSequence);
+    }
+    public List<Psm> findByPeptideSubSequence(String peptideSequence) {
+        return solrPsmRepository.findByPeptideSequence("*"+peptideSequence+"*");
     }
 
-    public List<Psm> findByPepSequenceAndProjectAccessions(String pepSequence, String projectAccession) {
-        return solrPsmRepository.findByPepSequenceAndProjectAccessions(pepSequence,projectAccession);
+    public List<Psm> findByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
+        return solrPsmRepository.findByPeptideSequenceAndProjectAccessions(peptideSequence,projectAccession);
+    }
+    public List<Psm> findByPeptideSubSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
+        return solrPsmRepository.findByPeptideSequenceAndProjectAccessions("*"+peptideSequence+"*",projectAccession);
     }
 
-    public List<Psm> findByPepSequenceAndAssayAccessions(String pepSequence, String assayAccession) {
-        return solrPsmRepository.findByPepSequenceAndAssayAccessions(pepSequence,assayAccession);
+    public List<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
+        return solrPsmRepository.findByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession);
+    }
+    public List<Psm> findByPeptideSubSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
+        return solrPsmRepository.findByPeptideSequenceAndAssayAccession("*"+peptideSequence+"*", assayAccession);
     }
 
     // Project accession query methods
-    public List<Psm> findByProjectAccessions(String projectAccession) {
-        return solrPsmRepository.findByProjectAccessions(projectAccession);
+    public List<Psm> findByProjectAccession(String projectAccession) {
+        return solrPsmRepository.findByProjectAccession(projectAccession);
     }
 
-    public List<Psm> findByProjectAccessions(Collection<String> projectAccessions) {
-        return solrPsmRepository.findByProjectAccessionsIn(projectAccessions);
+    public List<Psm> findByProjectAccession(Collection<String> projectAccessions) {
+        return solrPsmRepository.findByProjectAccessionIn(projectAccessions);
     }
 
     // Assay accession query methods
-    public List<Psm> findByAssayAccessions(String assayAccession) {
-        return solrPsmRepository.findByAssayAccessions(assayAccession);
+    public List<Psm> findByAssayAccession(String assayAccession) {
+        return solrPsmRepository.findByAssayAccession(assayAccession);
     }
 
-    public List<Psm> findByAssayAccessions(Collection<String> assayAccessions) {
-        return solrPsmRepository.findByAssayAccessionsIn(assayAccessions);
+    public List<Psm> findByAssayAccession(Collection<String> assayAccessions) {
+        return solrPsmRepository.findByAssayAccessionIn(assayAccessions);
     }
 
 }

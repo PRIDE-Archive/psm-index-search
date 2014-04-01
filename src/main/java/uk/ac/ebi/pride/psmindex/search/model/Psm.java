@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.psmindex.search.model;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 
 /**
@@ -16,7 +15,7 @@ public class Psm {
     @Field(PsmFields.ID)
     private String id;
 
-    @Field(PsmFields.PEP_SEQUENCE)
+    @Field(PsmFields.PEPTIDE_SEQUENCE)
     private String pepSequence;
 
     @Field(PsmFields.SPECTRUM_ID)

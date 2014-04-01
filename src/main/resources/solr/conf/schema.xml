@@ -101,9 +101,9 @@
         <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="peptide_sequence" type="text_ws" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="spectrum_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
-        <field name="anchor_protein" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="project_accessions" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="assay_accessions" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
+        <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="project_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="assay_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
 
         <!-- catchall field, containing all other searchable text fields (implemented
              via copyField further on in this schema  -->

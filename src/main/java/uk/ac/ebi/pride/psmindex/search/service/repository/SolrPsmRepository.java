@@ -23,22 +23,22 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
 
     //Sequence query methods
     @Query("peptide_sequence:?0")
-    List<Psm> findByPepSequence(String pepSequence);
-    @Query("peptide_sequence:?0 AND project_accessions:?1")
-    List<Psm> findByPepSequenceAndProjectAccessions(String pepSequence, String projectAccession);
-    @Query("peptide_sequence:?0 AND assay_accessions:?1")
-    List<Psm> findByPepSequenceAndAssayAccessions(String pepSequence, String assayAccession);
+    List<Psm> findByPeptideSequence(String peptideSequence);
+    @Query("peptide_sequence:?0 AND project_accession:?1")
+    List<Psm> findByPeptideSequenceAndProjectAccessions(String peptideSequence, String projectAccession);
+    @Query("peptide_sequence:?0 AND assay_accession:?1")
+    List<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession);
 
     // Project accession query methods
-    @Query("project_accessions:?0")
-    List<Psm> findByProjectAccessions(String projectAccession);
-    @Query("project_accessions:(?0)")
-    List<Psm> findByProjectAccessionsIn(Collection<String> projectAccessions);
+    @Query("project_accession:?0")
+    List<Psm> findByProjectAccession(String projectAccession);
+    @Query("project_accession:(?0)")
+    List<Psm> findByProjectAccessionIn(Collection<String> projectAccessions);
 
 
     // Assay accession query methods
-    @Query("assay_accessions:?0")
-    List<Psm> findByAssayAccessions(String assayAccession);
-    @Query("assay_accessions:(?0)")
-    List<Psm> findByAssayAccessionsIn(Collection<String> assayAccessions);
+    @Query("assay_accession:?0")
+    List<Psm> findByAssayAccession(String assayAccession);
+    @Query("assay_accession:(?0)")
+    List<Psm> findByAssayAccessionIn(Collection<String> assayAccessions);
 }
