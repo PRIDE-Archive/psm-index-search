@@ -39,7 +39,6 @@ public class ProjectPsmsIndexer {
             if (pathToMzTabFiles != null) {
                 File generatedDirectory = new File(pathToMzTabFiles);
                 psms = MzTabDataProviderReader.readPsmsFromMzTabFilesDirectory(projectAccession, generatedDirectory);
-                logger.debug("Found " + getTotalPsmsCount(psms) + " psms in directory " + pathToMzTabFiles);
             }
         } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
             logger.error("Cannot get psms from project " + projectAccession + " in folder" + pathToMzTabFiles);
@@ -48,10 +47,12 @@ public class ProjectPsmsIndexer {
         }
 
         endTime = System.currentTimeMillis();
-        logger.info("DONE getting psms from file for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
+        logger.info("Found " + getTotalPsmsCount(psms) + " psms "
+                + " in directory " + pathToMzTabFiles
+                + " for project " + projectAccession
+                + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
         // add all PSMs to index
-        logger.info("Adding psms to index for project " + projectAccession);
         startTime = System.currentTimeMillis();
 
         for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> assayPsms : psms.entrySet()) {
