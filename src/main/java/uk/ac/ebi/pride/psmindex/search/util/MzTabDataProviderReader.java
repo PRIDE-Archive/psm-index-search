@@ -98,7 +98,16 @@ public class MzTabDataProviderReader {
                     }
                     modificationLine = modificationLine + "|";
                 }
-                modificationLine = modificationLine.substring(0,modificationLine.length()); // remove the last |
+                if (modificationLine.length()>0)
+                    modificationLine = modificationLine.substring(0,modificationLine.length()-1); // remove the last |
+
+                modificationLine = modificationLine + "-";
+
+                String modAccession = mod.getAccession();
+                if (!mod.getAccession().startsWith("MOD")) {
+                    modAccession = "MOD:" + modAccession;
+                }
+                modificationLine = modificationLine + modAccession;
 
                 newPsm.getModifications().add(modificationLine);
             }
