@@ -6,10 +6,14 @@ import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.prider.dataprovider.project.ProjectProvider;
+import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIDGenerator;
+import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -66,25 +70,25 @@ public class MzTabDataProviderReader {
 
         LinkedList<Psm> res = new LinkedList<Psm>();
 
-        for (PSM filePsm: mzTabPsms) {
+        for (PSM filePsm : mzTabPsms) {
             Psm newPsm = new Psm();
             newPsm.setId(
-                      projectAccession + "_"
-                    + assayAccession + "_"
-                    + filePsm.getPSM_ID() + "_"
-                    + filePsm.getAccession() + "_"
-                    + filePsm.getSequence()
+                    projectAccession + "_"
+                            + assayAccession + "_"
+                            + filePsm.getPSM_ID() + "_"
+                            + filePsm.getAccession() + "_"
+                            + filePsm.getSequence()
             );
-            newPsm.setSpectrumId("TODO"); // TODO
+            newPsm.setSpectrumId(createSpectrumId(filePsm, projectAccession));
             newPsm.setPepSequence(filePsm.getSequence());
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
             newPsm.setProteinAccession(filePsm.getAccession());
             newPsm.setModifications(new LinkedList<String>());
-            for (Modification mod: filePsm.getModifications()) {
+            for (Modification mod : filePsm.getModifications()) {
                 String modificationLine = new String();
 
-                for (Map.Entry<Integer, CVParam> modPosition: mod.getPositionMap().entrySet()) {
+                for (Map.Entry<Integer, CVParam> modPosition : mod.getPositionMap().entrySet()) {
                     modificationLine = modificationLine + modPosition.getKey();
                     if (modPosition.getValue() != null) {
                         CVParam posCvParam = modPosition.getValue();
@@ -94,12 +98,12 @@ public class MzTabDataProviderReader {
                                 + posCvParam.getAccession() + ","
                                 + posCvParam.getName() + ","
                                 + posCvParam.getValue()
-                        + "]";
+                                + "]";
                     }
                     modificationLine = modificationLine + "|";
                 }
-                if (modificationLine.length()>0)
-                    modificationLine = modificationLine.substring(0,modificationLine.length()-1); // remove the last |
+                if (modificationLine.length() > 0)
+                    modificationLine = modificationLine.substring(0, modificationLine.length() - 1); // remove the last |
 
                 modificationLine = modificationLine + "-";
 
@@ -117,6 +121,61 @@ public class MzTabDataProviderReader {
         }
 
         return res;
+    }
+
+    /**
+     * Creates a spectrum Id compatible with PRIDE 3
+     *
+     * @param psm              original mzTab psm
+     * @param projectAccession PRIDE Archive accession
+     * @return the spectrum Id or "unknown_id" if the conversion fails
+     */
+    private static String createSpectrumId(PSM psm, String projectAccession) {
+
+        String msRunFileName;
+        String identifierInMsRunFile;
+        String spectrumId = "unknown_id";
+
+        SpectraRef spectrum;
+
+        SplitList<SpectraRef> spectra = psm.getSpectraRef();
+        if (spectra != null && !spectra.isEmpty()) {
+
+            // NOTE: If the psm was discovered as a combination of several spectra, we will
+            // simplify the case choosing only the first spectrum
+            if (spectra.size() != 1) {
+                logger.debug("Found " + spectra.size() + " spectra for PSM " +
+                        psm.getPSM_ID() + " only the first one will be use for generating the spectrum id");
+            }
+            spectrum = spectra.get(0);
+
+            if (spectrum != null) {
+
+                msRunFileName = extractFileName(spectrum.getMsRun().getLocation().getFile());
+                identifierInMsRunFile = spectrum.getReference();
+
+                if (msRunFileName != null && !msRunFileName.isEmpty() && identifierInMsRunFile != null && !identifierInMsRunFile.isEmpty()) {
+                    SpectrumIDGenerator spectrumIDGenerator = new SpectrumIdGeneratorPride3();
+                    spectrumId = spectrumIDGenerator.generate(projectAccession, msRunFileName, identifierInMsRunFile);
+                } else {
+                    logger.warn("The spectrum id for PSM " + psm.getPSM_ID() +
+                            " can not be generated because the file location is not valid");
+                }
+            } else {
+                logger.warn("The spectrum id for PSM " + psm.getPSM_ID() +
+                        " can not be generated because the spectrum is null");
+            }
+        } else {
+            logger.warn("The spectrum id for PSM " + psm.getPSM_ID() +
+                    " can not be generated because the spectraRef is null or empty");
+        }
+
+        return spectrumId;
+    }
+
+    private static String extractFileName(String filePath) {
+        Path p = Paths.get(filePath);
+        return p.getFileName().toString();
     }
 
     private static void updatePsm(Psm psm, PSM mzTabPsm) {

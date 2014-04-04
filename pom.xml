@@ -201,11 +201,11 @@
             <version>${prider.repo.version}</version>
         </dependency>
 
-        <!-- pride utils-->
+        <!-- pride utils for spectrum id generation -->
         <dependency>
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-utils</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </dependency>
 
         <dependency>
