@@ -76,4 +76,13 @@ public class PsmSearchService {
         return solrPsmRepository.findByAssayAccessionIn(assayAccessions);
     }
 
+    // Spectrum id query methods
+    public List<Psm> findBySpectrumId(String spectrumId) {
+        return solrPsmRepository.findBySpectrumId(spectrumId);
+    }
+
+    public List<Psm> findBySpectrumId(Collection<String> spectrumIds) {
+        return solrPsmRepository.findBySpectrumIdIn(spectrumIds);
+    }
+
 }

@@ -35,7 +35,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     // PSM 2 test data
     private static final String PSM_2_ID = "TEST-PSM-ID2";
     private static final String PSM_2_SEQUENCE = "YSQPEDSLIPFFEITVPESQLTVSQFTLPK";
-    private static final String PSM_2_SPECTRUM = "SPECTRUM-ID2";
+    private static final String PSM_2_SPECTRUM = "SPECTRUM-ID1";
 
 
     // PSM 3 test data
@@ -351,6 +351,38 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByAssayAccession(Arrays.asList(ASSAY_1_ACCESSION, ASSAY_2_ACCESSION));
+
+        assertNotNull(psms);
+        assertEquals(3, psms.size());
+
+        for (Psm psm : psms) {
+            assertTrue(psm.getId().contentEquals(PSM_3_ID) ||
+                    psm.getId().contentEquals(PSM_2_ID) ||
+                    psm.getId().contentEquals(PSM_1_ID));
+        }
+
+    }
+
+    @Test
+    public void testSearchBySpectrumId() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findBySpectrumId(PSM_1_SPECTRUM);
+
+        assertNotNull(psms);
+        assertEquals(2, psms.size());
+
+        for (Psm psm : psms) {
+            assertTrue(psm.getId().contentEquals(PSM_1_ID) || psm.getId().contentEquals(PSM_2_ID));
+        }
+
+    }
+
+    @Test
+    public void testSearchBySpectrumIds() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findBySpectrumId(Arrays.asList(PSM_1_SPECTRUM, PSM_2_SPECTRUM, PSM_3_SPECTRUM));
 
         assertNotNull(psms);
         assertEquals(3, psms.size());
