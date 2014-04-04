@@ -12,8 +12,7 @@ public class PsmFields {
     public static final String PROTEIN_ACCESSION = "protein_accession";
     public static final String PROJECT_ACCESSION = "project_accession";
     public static final String ASSAY_ACCESSION = "assay_accession";
-    public static final String MODS_WITH_LOCATIONS = "*_pos";
-    public static final String SPECIES = "*_species";
+    public static final String MODIFICATIONS = "modifications";
 
     //For the future
     public static final String UNIQUE = "unique";

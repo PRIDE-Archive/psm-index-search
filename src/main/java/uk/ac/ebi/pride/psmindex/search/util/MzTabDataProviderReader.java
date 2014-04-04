@@ -2,10 +2,7 @@ package uk.ac.ebi.pride.psmindex.search.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.pride.jmztab.model.MZTabFile;
-import uk.ac.ebi.pride.jmztab.model.Modification;
-import uk.ac.ebi.pride.jmztab.model.PSM;
-import uk.ac.ebi.pride.jmztab.model.SplitList;
+import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.prider.dataprovider.project.ProjectProvider;
@@ -83,6 +80,28 @@ public class MzTabDataProviderReader {
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
             newPsm.setProteinAccession(filePsm.getAccession());
+            newPsm.setModifications(new LinkedList<String>());
+            for (Modification mod: filePsm.getModifications()) {
+                String modificationLine = new String();
+
+                for (Map.Entry<Integer, CVParam> modPosition: mod.getPositionMap().entrySet()) {
+                    modificationLine = modificationLine + modPosition.getKey();
+                    if (modPosition.getValue() != null) {
+                        CVParam posCvParam = modPosition.getValue();
+
+                        modificationLine = modificationLine + "["
+                                + posCvParam.getCvLabel() + ","
+                                + posCvParam.getAccession() + ","
+                                + posCvParam.getName() + ","
+                                + posCvParam.getValue()
+                        + "]";
+                    }
+                    modificationLine = modificationLine + "|";
+                }
+                modificationLine = modificationLine.substring(0,modificationLine.length()); // remove the last |
+
+                newPsm.getModifications().add(modificationLine);
+            }
             // TODO - more fields to come
 
             res.add(newPsm);

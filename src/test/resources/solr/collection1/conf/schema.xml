@@ -104,7 +104,7 @@
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="assay_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
-
+        <field name="modifications" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
 
         <!-- catchall field, containing all other searchable text fields (implemented
              via copyField further on in this schema  -->
@@ -162,10 +162,7 @@
         <dynamicField name="*_pi"  type="pint"    indexed="true"  stored="true"/>
         <!--<dynamicField name="*_c"   type="currency" indexed="true"  stored="true"/>-->
 
-        <!-- dynamicFields by species and modifications -->
         <dynamicField name="*_species" type="text_general" indexed="true" stored="true" multiValued="true"/>
-        <dynamicField name="*_pos" type="text_general" indexed="true" stored="true" multiValued="true"/>
-
 
         <dynamicField name="ignored_*" type="ignored" multiValued="true"/>
         <dynamicField name="attr_*" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -349,11 +346,11 @@
           <analyzer class="org.apache.lucene.analysis.el.GreekAnalyzer"/>
         </fieldType>
         -->
+
         <!-- A text field that allow searching by sub-peptides -->
         <fieldType name="text_seq" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <tokenizer class="solr.StandardTokenizerFactory" />
-                <filter class="solr.NGramFilterFactory" minGramSize="6" maxGramSize="100" />
+                <tokenizer class="solr.NGramFilterFactory" minGramSize="6" maxGramSize="100" />
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
             <analyzer type="query">
@@ -361,6 +358,7 @@
                 <filter class="solr.LowerCaseFilterFactory"/>
             </analyzer>
         </fieldType>
+
 
         <!-- A text field that only splits on whitespace for exact matching of words -->
         <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">

@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.psmindex.search.model;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -30,13 +29,8 @@ public class Psm {
     @Field(PsmFields.ASSAY_ACCESSION)
     private String assayAccession;
 
-    //At this moment it stores (position, {mod_accession,mod_name})
-    @Field(PsmFields.MODS_WITH_LOCATIONS)
-    private Map<String,List<String>> modsAccessions;
-
-    //At this moment it stores (taxid, name)
-    @Field(PsmFields.SPECIES)
-    private Map<String,List<String>> species;
+    @Field(PsmFields.MODIFICATIONS)
+    private List<String> modifications;
 
 
     public String getId() {
@@ -87,19 +81,12 @@ public class Psm {
         this.assayAccession = assayAccession;
     }
 
-    public Map<String, List<String>> getModsAccessions() {
-        return modsAccessions;
+    public List<String> getModifications() {
+        return modifications;
     }
 
-    public void setModsAccessions(Map<String, List<String>> modsAccessions) {
-        this.modsAccessions = modsAccessions;
+    public void setModifications(List<String> modifications) {
+        this.modifications = modifications;
     }
 
-    public Map<String, List<String>> getSpecies() {
-        return species;
-    }
-
-    public void setSpecies(Map<String, List<String>> species) {
-        this.species = species;
-    }
 }

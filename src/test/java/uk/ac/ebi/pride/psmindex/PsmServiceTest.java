@@ -373,16 +373,11 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         psm.setProjectAccession(PROJECT_1_ACCESSION);
         psm.setAssayAccession(ASSAY_1_ACCESSION);
 
-        SortedMap<String, List<String>> modifications = new TreeMap<String, List<String>>();
-        modifications.put(MOD_1_POS + "_pos", Arrays.asList(MOD_1_ACCESSION, MOD_1_NAME));
-        modifications.put(MOD_2_POS + "_pos", Arrays.asList(MOD_2_ACCESSION, MOD_2_NAME));
+        List<String> modifications = new LinkedList<String>();
+        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
+        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
 
-        psm.setModsAccessions(modifications);
-
-        SortedMap<String, List<String>> species = new TreeMap<String, List<String>>();
-        species.put(SPECIES_ACCESSION + "_species", Arrays.asList(SPECIES_ACCESSION, SPECIES_NAME));
-
-        psm.setSpecies(species);
+        psm.setModifications(modifications);
 
 
         PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
@@ -400,16 +395,11 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         psm.setProjectAccession(PROJECT_2_ACCESSION);
         psm.setAssayAccession(ASSAY_2_ACCESSION);
 
-        SortedMap<String, List<String>> modifications = new TreeMap<String, List<String>>();
-        modifications.put(MOD_1_POS + "_pos", Arrays.asList(MOD_1_ACCESSION, MOD_1_NAME));
-        modifications.put(MOD_2_POS + "_pos", Arrays.asList(MOD_2_ACCESSION, MOD_2_NAME));
+        List<String> modifications = new LinkedList<String>();
+        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
+        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
 
-        psm.setModsAccessions(modifications);
-
-        SortedMap<String, List<String>> species = new TreeMap<String, List<String>>();
-        species.put(SPECIES_ACCESSION + "_species", Arrays.asList(SPECIES_ACCESSION, SPECIES_NAME));
-
-        psm.setSpecies(species);
+        psm.setModifications(modifications);
 
         PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
         psmIndexService.save(psm);
@@ -425,16 +415,11 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         psm.setProjectAccession(PROJECT_2_ACCESSION);
         psm.setAssayAccession(ASSAY_2_ACCESSION);
 
-        SortedMap<String, List<String>> modifications = new TreeMap<String, List<String>>();
-        modifications.put(MOD_1_POS + "_pos", Arrays.asList(MOD_1_ACCESSION, MOD_1_NAME));
-        modifications.put(MOD_2_POS + "_pos", Arrays.asList(MOD_2_ACCESSION, MOD_2_NAME));
+        List<String> modifications = new LinkedList<String>();
+        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
+        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
 
-        psm.setModsAccessions(modifications);
-
-        SortedMap<String, List<String>> species = new TreeMap<String, List<String>>();
-        species.put(SPECIES_ACCESSION + "_species", Arrays.asList(SPECIES_ACCESSION, SPECIES_NAME));
-
-        psm.setSpecies(species);
+        psm.setModifications(modifications);
 
         PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
         psmIndexService.save(psm);

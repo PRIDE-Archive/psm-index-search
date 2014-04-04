@@ -104,6 +104,7 @@
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="assay_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="modifications" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
 
         <!-- catchall field, containing all other searchable text fields (implemented
              via copyField further on in this schema  -->
