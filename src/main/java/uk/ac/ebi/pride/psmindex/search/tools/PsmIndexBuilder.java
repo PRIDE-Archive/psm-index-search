@@ -61,17 +61,14 @@ public class PsmIndexBuilder {
 
         // iterate through project to index psms
         for (ProjectProvider project : projects) {
-            if (project.isPublicProject()) { // we are going to index just public projects
+            String generatedFolderPath = MzTabDataProviderReader.buildGeneratedDirectoryFilePath(
+                    psmIndexBuilder.submissionsDirectory.getAbsolutePath(),
+                    project
+            );
 
-                String generatedFolderPath = MzTabDataProviderReader.buildGeneratedDirectoryFilePath(
-                        psmIndexBuilder.submissionsDirectory.getAbsolutePath(),
-                        project
-                );
-
-                projectPsmsIndexer.indexAllPsms(
-                        project.getAccession(), generatedFolderPath
-                );
-            }
+            projectPsmsIndexer.indexAllPsms(
+                    project.getAccession(), generatedFolderPath
+            );
         }
     }
 
