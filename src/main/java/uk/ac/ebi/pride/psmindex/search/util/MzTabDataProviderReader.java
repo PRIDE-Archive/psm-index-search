@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.psmindex.search.util;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jmztab.model.*;
@@ -12,8 +13,6 @@ import uk.ac.ebi.pride.psmindex.search.model.Psm;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -174,8 +173,7 @@ public class MzTabDataProviderReader {
     }
 
     private static String extractFileName(String filePath) {
-        Path p = Paths.get(filePath);
-        return p.getFileName().toString();
+        return FilenameUtils.getName(filePath);
     }
 
     private static void updatePsm(Psm psm, PSM mzTabPsm) {
