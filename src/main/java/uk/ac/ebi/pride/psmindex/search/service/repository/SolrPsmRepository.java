@@ -48,4 +48,12 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     @Query("spectrum_id:(?0)")
     List<Psm> findBySpectrumIdIn(Collection<String> spectrumIds);
 
+    // Reported id query methods
+    @Query("reported_id:?0")
+    List<Psm> findByReportedId(String reportedId);
+    @Query("reported_id:?0 AND project_accession:?1")
+    List<Psm> findByReportedIdAndProjectAccession(String reportedId, String projectAccession);
+    @Query("reported_id:?0 AND assay_accession:?1")
+    List<Psm> findByReportedIdAndAssayAccession(String reportedId, String assayAccession);
+
 }

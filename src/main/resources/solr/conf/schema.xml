@@ -99,12 +99,25 @@
 
         <!-- identifier for each document: the psm accession -->
         <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+        <field name="reported_id" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="peptide_sequence" type="text_ws" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="spectrum_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="assay_accession" type="text_ws" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="modifications" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
+
+        <field name="unique" type="boolean" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="search_engine" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
+        <field name="search_engine_score" type="text_ws" indexed="true" stored="true" required="false" multiValued="true"/>
+        <field name="retention_time" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="charge" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="exp_mass_to_charge" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="calc_mass_to_charge" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="pre_amino_acid" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="post_amino_acid" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="start_position" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
+        <field name="end_position" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
 
         <!-- catchall field, containing all other searchable text fields (implemented
              via copyField further on in this schema  -->

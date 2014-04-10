@@ -29,20 +29,21 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
     // PSM 1 test data
     private static final String PSM_1_ID = "TEST-PSM-ID1";
+    private static final String PSM_1_REPORTED_ID = "TEST-PSM-REPORTED-ID1";
     private static final String PSM_1_SEQUENCE = "MLVEYTQNQKEVLSEKEKKLEEYK";
     private static final String PSM_1_SPECTRUM = "SPECTRUM-ID1";
 
     // PSM 2 test data
     private static final String PSM_2_ID = "TEST-PSM-ID2";
+    private static final String PSM_2_REPORTED_ID = "TEST-PSM-REPORTED-ID2";
     private static final String PSM_2_SEQUENCE = "YSQPEDSLIPFFEITVPESQLTVSQFTLPK";
     private static final String PSM_2_SPECTRUM = "SPECTRUM-ID1";
 
 
     // PSM 3 test data
     private static final String PSM_3_ID = "TEST-PSM-ID3";
+    private static final String PSM_3_REPORTED_ID = "TEST-PSM-REPORTED-ID3";
     private static final String PSM_3_SEQUENCE = "YSQPEDSLIPFFEITVPE";
-
-
     private static final String PSM_3_SPECTRUM = "SPECTRUM-ID3";
 
 
@@ -395,10 +396,63 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
     }
 
+    @Test
+    public void testSearchByReportedId() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByReportedId(PSM_1_REPORTED_ID);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+
+    }
+
+    @Test
+    public void testSearchByReportedIdAndProjectAccessions() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByReportedIdAndProjectAccession(PSM_1_REPORTED_ID, PROJECT_1_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+    }
+
+    @Test
+    public void testSearchByReportedIdAndAssaysAccession() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByReportedIdAndAssayAccession(PSM_1_REPORTED_ID, ASSAY_1_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+
+    }
+
+    @Test
+    public void testSearchByReportedIdAndIncorrectAssaysAccession() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        //There is not psm with these reported id and the assay accession
+        List<Psm> psms = psmSearchService.findByReportedIdAndAssayAccession(PSM_1_REPORTED_ID, ASSAY_2_ACCESSION);
+        assertNotNull(psms);
+        assertEquals(0, psms.size());
+
+    }
+
     private void addPsm_1() {
         Psm psm = new Psm();
 
         psm.setId(PSM_1_ID);
+        psm.setReportedId(PSM_1_REPORTED_ID);
         psm.setPepSequence(PSM_1_SEQUENCE);
         psm.setSpectrumId(PSM_1_SPECTRUM);
         psm.setProteinAccession(PROTEIN_1_ACCESSION);
@@ -421,6 +475,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         Psm psm = new Psm();
 
         psm.setId(PSM_2_ID);
+        psm.setReportedId(PSM_2_REPORTED_ID);
         psm.setPepSequence(PSM_2_SEQUENCE);
         psm.setSpectrumId(PSM_2_SPECTRUM);
         psm.setProteinAccession(PROTEIN_2_ACCESSION);
@@ -441,6 +496,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         Psm psm = new Psm();
 
         psm.setId(PSM_3_ID);
+        psm.setReportedId(PSM_3_REPORTED_ID);
         psm.setPepSequence(PSM_3_SEQUENCE);
         psm.setSpectrumId(PSM_3_SPECTRUM);
         psm.setProteinAccession(PROTEIN_2_ACCESSION);

@@ -212,7 +212,7 @@
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>jmztab</artifactId>
             <!-- based on mzTab specification version 1.0 RC5-->
-            <version>2.1.6-SNAPSHOT</version>
+            <version>2.1.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>

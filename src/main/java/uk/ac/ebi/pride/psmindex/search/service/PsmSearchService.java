@@ -85,4 +85,17 @@ public class PsmSearchService {
         return solrPsmRepository.findBySpectrumIdIn(spectrumIds);
     }
 
+    // Reported id query methods
+    public List<Psm> findByReportedId(String reportedId) {
+        return solrPsmRepository.findByReportedId(reportedId);
+    }
+
+    public List<Psm> findByReportedIdAndProjectAccession(String reportedId, String projectAccession) {
+        return solrPsmRepository.findByReportedIdAndProjectAccession(reportedId, projectAccession);
+    }
+
+    public List<Psm> findByReportedIdAndAssayAccession(String reportedId, String assayAccession) {
+        return solrPsmRepository.findByReportedIdAndAssayAccession(reportedId, assayAccession);
+    }
+
 }

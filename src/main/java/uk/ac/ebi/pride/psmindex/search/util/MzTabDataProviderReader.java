@@ -78,6 +78,7 @@ public class MzTabDataProviderReader {
                             + filePsm.getAccession() + "_"
                             + filePsm.getSequence()
             );
+            newPsm.setReportedId(filePsm.getPSM_ID());
             newPsm.setSpectrumId(createSpectrumId(filePsm, projectAccession));
             newPsm.setPepSequence(filePsm.getSequence());
             newPsm.setProjectAccession(projectAccession);
@@ -113,8 +114,55 @@ public class MzTabDataProviderReader {
                 modificationLine = modificationLine + modAccession;
 
                 newPsm.getModifications().add(modificationLine);
+
+                // as an alternative we can call the mzTab method to write it back
+                // newPsm.getModifications().add(mod.toString());
             }
-            // TODO - more fields to come
+
+            //Unique
+            MZBoolean unique = filePsm.getUnique();
+            if (unique != null) {
+                newPsm.setUnique(MZBoolean.True.equals(unique));
+            } else {
+                newPsm.setUnique(null);
+            }
+
+            //Search Engine
+            //For now we keep the same representation as it is in the mzTab line
+            newPsm.setSearchEngine(new LinkedList<String>());
+            //If the mzTab search engine can not be converted SplitList can be null
+            if (filePsm.getSearchEngine() != null) {
+                for (Param searchEngine : filePsm.getSearchEngine()) {
+                    //The toString method is overridden in mzTab library to write the Param mzTab representation
+                    newPsm.getSearchEngine().add(searchEngine.toString());
+                }
+            }
+
+            //Search Engine Score
+            newPsm.setSearchEngineScore(new LinkedList<String>());
+            //If the mzTab search engine can not be converted SplitList can be null
+            if (filePsm.getSearchEngineScore() != null) {
+                for (Param searchEngineScore : filePsm.getSearchEngineScore()) {
+                    //The toString method is overridden in mzTab library to write the Param mzTab representation
+                    newPsm.getSearchEngineScore().add(searchEngineScore.toString());
+                }
+            }
+
+            // Retention Time
+            // NOTE: If the psm was discovered as a combination of several spectra, we will
+            // simplify the case choosing only the first spectrum and the first retention time
+            SplitList<Double> retentionTimes = filePsm.getRetentionTime();
+            if (retentionTimes != null && !retentionTimes.isEmpty()) {
+                newPsm.setRetentionTime(retentionTimes.get(0));
+            }
+
+            newPsm.setCharge(filePsm.getCharge());
+            newPsm.setExpMassToCharge(filePsm.getExpMassToCharge());
+            newPsm.setCalculatedMassToCharge(filePsm.getCalcMassToCharge());
+            newPsm.setPreAminoAcid(filePsm.getPre());
+            newPsm.setPostAminoAcid(filePsm.getPost());
+            newPsm.setStartPosition(Integer.parseInt(filePsm.getStart()));
+            newPsm.setEndPosition(Integer.parseInt(filePsm.getEnd()));
 
             res.add(newPsm);
         }
@@ -174,28 +222,6 @@ public class MzTabDataProviderReader {
 
     private static String extractFileName(String filePath) {
         return FilenameUtils.getName(filePath);
-    }
-
-    private static void updatePsm(Psm psm, PSM mzTabPsm) {
-
-        // TODO
-        // We update the psm if we have the same id reported in several rows in the mzTab file.
-        // This can happen if the same Psm infer several proteins.
-        // The rest of the information should be the same, except pre, post, start, stop and protein accession.
-
-
-        //The save method will take into account the replacement of the ":" in the protein accessions
-        //Protein accession
-    }
-
-    private static Map<String, List<String>> createModsFromMzTab(SplitList<Modification> modifications) {
-        // TODO
-        return null;
-    }
-
-    private static Map<String, List<String>> createSpeciesFromMzTabPsm(String accession) {
-        // TODO
-        return null;
     }
 
     public static String buildGeneratedDirectoryFilePath(String prefix, ProjectProvider project) {
