@@ -161,8 +161,22 @@ public class MzTabDataProviderReader {
             newPsm.setCalculatedMassToCharge(filePsm.getCalcMassToCharge());
             newPsm.setPreAminoAcid(filePsm.getPre());
             newPsm.setPostAminoAcid(filePsm.getPost());
-            newPsm.setStartPosition(Integer.parseInt(filePsm.getStart()));
-            newPsm.setEndPosition(Integer.parseInt(filePsm.getEnd()));
+
+            if(filePsm.getStart()!=null){
+                try{
+                    newPsm.setStartPosition(Integer.parseInt(filePsm.getStart()));
+                } catch (NumberFormatException e){
+                    logger.warn("The start position of the peptide can not be parsed as a Number", e);
+                }
+            }
+
+            if(filePsm.getEnd()!=null){
+                try{
+                    newPsm.setEndPosition(Integer.parseInt(filePsm.getEnd()));
+                } catch (NumberFormatException e){
+                    logger.warn("The end position of the peptide can not be parsed as a Number", e);
+                }
+            }
 
             res.add(newPsm);
         }
