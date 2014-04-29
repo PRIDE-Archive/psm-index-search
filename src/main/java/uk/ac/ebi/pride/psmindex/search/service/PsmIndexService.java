@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
-import uk.ac.ebi.pride.psmindex.search.util.PsmIdCleaner;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -41,12 +40,24 @@ public class PsmIndexService {
         if (psms==null || !psms.iterator().hasNext())
             logger.info("No PSMS to save");
         else {
-            // fix the accession of needed
+            // fix the accession if needed
 //        for (Psm psm: psms) {
 ////            logger.info("Saving PSM with accession " + psm.getId());
 //            psm.setId(PsmIdCleaner.cleanId(psm.getId()));
 //        }
             solrPsmRepository.save(psms);
+        }
+    }
+
+    public void delete(Psm psm){
+        solrPsmRepository.delete(psm);
+    }
+
+    public void delete(Iterable<Psm> psms){
+        if (psms==null || !psms.iterator().hasNext())
+            logger.info("No PSMS to delete");
+        else {
+            solrPsmRepository.delete(psms);
         }
     }
 

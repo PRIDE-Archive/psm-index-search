@@ -72,10 +72,6 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     private static final String MOD_1_NAME = "phosphorylated residue";
     private static final String MOD_2_NAME = "amidated residue";
 
-    //Species
-    private static final String SPECIES_NAME = "Homo sapiens (Human)";
-    private static final String SPECIES_ACCESSION = "9606";
-
     //Sequences
     private static final String SEQUENCE_SUB = "IPFFEITVPE";
     private static final String SEQUENCE_LT_6 = "ITVPE";
@@ -256,19 +252,19 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
     }
 
-//    @Test
-//    public void testSearchByPepSequenceStrict() throws SolrServerException {
-//        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
-//
-//        List<Psm> psms = psmSearchService.findByPepSequence(PSM_3_SEQUENCE);
-//
-//        assertNotNull(psms);
-//        assertEquals(1, psms.size());
-//
-//        Psm psm3 = psms.get(0);
-//        assertEquals(PSM_3_ID, psm3.getId());
-//
-//    }
+    @Test
+    public void testSearchByPepSequenceStrict() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByPeptideSequence(PSM_3_SEQUENCE);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm3 = psms.get(0);
+        assertEquals(PSM_3_ID, psm3.getId());
+
+    }
 
     @Test
     public void testSearchByPeptideSequenceAndProjectAccessions() throws SolrServerException {
@@ -446,6 +442,40 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         assertNotNull(psms);
         assertEquals(0, psms.size());
 
+    }
+
+    @Test
+    public void testDeletePsm() throws SolrServerException {
+        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findById(PSM_1_ID);
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+
+        psmIndexService.delete(psm1);
+        psms = psmSearchService.findById(PSM_1_ID);
+
+        assertNotNull(psms);
+        assertEquals(0, psms.size());
+    }
+
+    @Test
+    public void testDeletePsms() throws SolrServerException {
+        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findById(Arrays.asList(PSM_1_ID,PSM_2_ID,PSM_3_ID));
+        assertNotNull(psms);
+        assertEquals(3, psms.size());
+
+        psmIndexService.delete(psms);
+        psms = psmSearchService.findById(Arrays.asList(PSM_1_ID,PSM_2_ID,PSM_3_ID));
+
+        assertNotNull(psms);
+        assertEquals(0, psms.size());
     }
 
     private void addPsm_1() {
