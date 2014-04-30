@@ -2,12 +2,16 @@ package uk.ac.ebi.pride.psmindex.search.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
 import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -25,6 +29,7 @@ public class ProjectPsmsIndexer {
         this.psmIndexService = psmIndexService;
     }
 
+    @Deprecated
     public void indexAllPsms(String projectAccession, String pathToMzTabFiles) {
 
         Map<String, LinkedList<Psm>> psms = new HashMap<String, LinkedList<Psm>>();
@@ -89,6 +94,7 @@ public class ProjectPsmsIndexer {
 
     }
 
+    @Deprecated
     private static long getTotalPsmsCount(Map<? extends String, ? extends Collection<? extends Psm>> psms) {
         long res = 0;
 
@@ -98,4 +104,47 @@ public class ProjectPsmsIndexer {
 
         return res;
     }
+
+
+    public void indexAllPsmsForProjectAndAssay(String projectAccession, String assayAccession, MZTabFile mzTabFile){
+        LinkedList<Psm> psms = new LinkedList<Psm>();
+
+        long startTime;
+        long endTime;
+
+        startTime = System.currentTimeMillis();
+
+        // build PSMs from mzTabFiles
+        try {
+            if (mzTabFile != null) {
+                psms = MzTabDataProviderReader.readPsmsFromMzTabFile(projectAccession, assayAccession, mzTabFile);
+            }
+        } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
+            logger.error("Cannot get psms from project " + projectAccession + "and assay" + assayAccession + " in file" + mzTabFile);
+            logger.error("Reason: ");
+            e.printStackTrace();
+        }
+
+        endTime = System.currentTimeMillis();
+        logger.info("Found " + psms.size() + " psms "
+                + " in file " + mzTabFile
+                + " for project " + projectAccession
+                + " and assay" + assayAccession
+                + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
+
+        // add all PSMs to index
+        startTime = System.currentTimeMillis();
+
+        psmIndexService.save(psms);
+        logger.debug("COMMITTED " + psms.size() +
+                " psms from PROJECT:" + projectAccession +
+                " ASSAY:" + assayAccession);
+
+
+        endTime = System.currentTimeMillis();
+        logger.info("DONE indexing all PSMs for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
+
+    }
+
+
 }

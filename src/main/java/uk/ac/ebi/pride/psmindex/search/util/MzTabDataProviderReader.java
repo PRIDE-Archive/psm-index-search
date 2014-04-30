@@ -6,14 +6,16 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
-import uk.ac.ebi.pride.prider.dataprovider.project.ProjectProvider;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIDGenerator;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -25,8 +27,6 @@ public class MzTabDataProviderReader {
 
     private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
 
-    private static final String GENERATED_FOLDER_NAME = "generated";
-
     /**
      * mzTab files in the directory will have names such as PRIDE_Exp_Complete_Ac_28654.submissions. We are interested in the
      * assay accession, the last bit if we split by '_'.
@@ -34,6 +34,7 @@ public class MzTabDataProviderReader {
      * @return A map of assay accessions to PSMs
      * @throws java.io.IOException
      */
+    @Deprecated
     public static Map<String, LinkedList<Psm>> readPsmsFromMzTabFilesDirectory(String projectAccession, File mzTabFilesDirectory) throws IOException, MZTabException {
 
         Map<String, LinkedList<Psm>> res = new HashMap<String, LinkedList<Psm>>();
@@ -65,22 +66,45 @@ public class MzTabDataProviderReader {
         return res;
     }
 
+    /**
+     * The map between the assay accession and the file need to be provided externally from the database
+     *
+     * @return A map of assay accessions to PSMs
+     * @throws java.io.IOException
+     */
+    public static LinkedList<Psm> readPsmsFromMzTabFile(String projectAccession, String assayAccession, MZTabFile mzTabFile) throws IOException, MZTabException {
+
+        LinkedList<Psm> res = new LinkedList<Psm>();
+
+        if (mzTabFile != null) {
+
+                // get all psms from the file
+                res = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), projectAccession, assayAccession);
+                logger.debug("Found " + res.size() + " psms for Assay " + assayAccession + " in file " + mzTabFile);
+
+        }
+
+        return res;
+    }
+
     private static LinkedList<Psm> convertFromMzTabPsmsToPrideArchivePsms(Collection<PSM> mzTabPsms, String projectAccession, String assayAccession) {
 
         LinkedList<Psm> res = new LinkedList<Psm>();
 
         for (PSM filePsm : mzTabPsms) {
+            String cleanPepSequence = PsmIdCleaner.cleanPeptideSequence(filePsm.getSequence());
+
             Psm newPsm = new Psm();
             newPsm.setId(
                     projectAccession + "_"
                             + assayAccession + "_"
                             + filePsm.getPSM_ID() + "_"
                             + filePsm.getAccession() + "_"
-                            + filePsm.getSequence()
+                            + cleanPepSequence
             );
             newPsm.setReportedId(filePsm.getPSM_ID());
             newPsm.setSpectrumId(createSpectrumId(filePsm, projectAccession));
-            newPsm.setPepSequence(filePsm.getSequence());
+            newPsm.setPepSequence(cleanPepSequence);
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
             newPsm.setProteinAccession(filePsm.getAccession());
@@ -236,25 +260,6 @@ public class MzTabDataProviderReader {
 
     private static String extractFileName(String filePath) {
         return FilenameUtils.getName(filePath);
-    }
-
-    public static String buildGeneratedDirectoryFilePath(String prefix, ProjectProvider project) {
-        if (project.isPublicProject()) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(project.getPublicationDate());
-            int month = calendar.get(Calendar.MONTH) + 1;
-
-            return prefix
-                    + File.separator + calendar.get(Calendar.YEAR)
-                    + File.separator + (month < 10 ? "0" : "") + month
-                    + File.separator + project.getAccession()
-                    + File.separator + GENERATED_FOLDER_NAME;
-        } else {
-            return prefix
-                    + File.separator + project.getAccession()
-                    + File.separator + GENERATED_FOLDER_NAME;
-        }
-
     }
 
 }
