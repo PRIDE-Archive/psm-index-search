@@ -15,6 +15,15 @@
     <name>psm-index-search</name>
     <url>http://maven.apache.org</url>
 
+    <!--
+     To build the project several settings are required which are provided via maven profiles
+     These are:
+            db-pride-repo-pridearch-ro-user
+            db-pride-repo-pridepro
+            pride-archive-solr-cores  -> Configure the solr cores
+            pride3-submission-pipeline
+ -->
+
     <developers>
         <developer>
             <name>PRIDE Developer</name>
@@ -38,11 +47,10 @@
 
     <properties>
         <prider.repo.version>0.1.13</prider.repo.version>
+        <spring.version>3.2.5.RELEASE</spring.version>
         <prider.data.provider.api.version>2.0.0-SNAPSHOT</prider.data.provider.api.version>
         <solrj.version>4.0.0</solrj.version>
         <spring.test.version>4.0.2.RELEASE</spring.test.version>
-        <pride.utilities.version>0.1.20</pride.utilities.version>
-        <!--<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>-->
     </properties>
 
     <build>
@@ -199,12 +207,6 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>oracle-thin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>uk.ac.ebi.pride.tools</groupId>
-            <artifactId>protein-details-fetcher</artifactId>
-            <version>1.0.1</version>
         </dependency>
 
     </dependencies>

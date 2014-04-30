@@ -27,14 +27,14 @@ public class PsmIdCleaner {
     public static String cleanPeptideSequence(String peptideSequence) {
         String res = null;
 
-        logger.info("Request to clean peptide sequence " + peptideSequence);
+        logger.debug("Request to clean peptide sequence " + peptideSequence);
 
         if(peptideSequence!= null){
             res = peptideSequence.toUpperCase();
             res = res.replaceAll(NO_PEPTIDE_REGEX,"");
         }
 
-        logger.info("Peptide sequence after cleaning it " + res);
+        logger.debug("Peptide sequence after cleaning it " + res);
 
         return res;
     }

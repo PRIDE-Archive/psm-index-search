@@ -57,41 +57,43 @@ public class ProjectPsmsIndexer {
                 + " for project " + projectAccession
                 + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
-        // add all PSMs to index
-        startTime = System.currentTimeMillis();
+        // add all PSMs to index if we have found some of them
+        if (getTotalPsmsCount(psms) != 0) {
+            startTime = System.currentTimeMillis();
 
-        for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> assayPsms : psms.entrySet()) {
-            Map<String, Psm> psmsToIndex = new HashMap<String, Psm>();
+            for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> assayPsms : psms.entrySet()) {
+                Map<String, Psm> psmsToIndex = new HashMap<String, Psm>();
 
-            for (Psm psm : assayPsms.getValue()) {
-                try {
-                    // add to save
-                    psmsToIndex.put(psm.getId(), psm);
+                for (Psm psm : assayPsms.getValue()) {
+                    try {
+                        // add to save
+                        psmsToIndex.put(psm.getId(), psm);
 
-                    logger.debug(
-                            "ADDED PSM " + psm.getId() +
-                                    " from PROJECT:" + projectAccession +
-                                    " ASSAY:" + assayPsms.getKey()
-                    );
-                } catch (Exception e) {
-                    logger.error("PSM " + psm.getId() + " caused an error");
-                    logger.error("ASSAY " + assayPsms.getKey());
-                    logger.error("PROJECT " + projectAccession);
-                    e.printStackTrace();
+                        logger.debug(
+                                "ADDED PSM " + psm.getId() +
+                                        " from PROJECT:" + projectAccession +
+                                        " ASSAY:" + assayPsms.getKey()
+                        );
+                    } catch (Exception e) {
+                        logger.error("PSM " + psm.getId() + " caused an error");
+                        logger.error("ASSAY " + assayPsms.getKey());
+                        logger.error("PROJECT " + projectAccession);
+                        e.printStackTrace();
+                    }
+
                 }
 
+
+                psmIndexService.save(psmsToIndex.values());
+                logger.info("COMMITTED " + psmsToIndex.size() +
+                        " psms from PROJECT:" + projectAccession +
+                        " ASSAY:" + assayPsms.getKey());
             }
 
+            endTime = System.currentTimeMillis();
+            logger.info("DONE indexing all PSMs for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
-            psmIndexService.save(psmsToIndex.values());
-            logger.debug("COMMITTED " + psmsToIndex.size() +
-                    " psms from PROJECT:" + projectAccession +
-                    " ASSAY:" + assayPsms.getKey());
         }
-
-        endTime = System.currentTimeMillis();
-        logger.info("DONE indexing all PSMs for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
-
     }
 
     @Deprecated
