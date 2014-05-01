@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.psmindex;
+package uk.ac.ebi.pride.psmindex.search.util;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
-import uk.ac.ebi.pride.psmindex.search.util.ErrorLogOutputStream;
 
 import java.io.File;
 import java.util.Arrays;
@@ -27,19 +26,19 @@ public class MzTabDataProviderReaderTest {
     private static Logger logger = LoggerFactory.getLogger(MzTabDataProviderReaderTest.class);
     private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
 
-    public static final String PROJECT_1_ACCESSION = "PXD000581";
-    public static final String PROJECT_2_ACCESSION = "TST000121";
+    private static final String PROJECT_1_ACCESSION = "PXD000581";
+    private static final String PROJECT_2_ACCESSION = "TST000121";
 
-    public static final String PROJECT_1_ASSAY_1 = "32411";
-    public static final String PROJECT_1_ASSAY_2 = "32416";
-    public static final String PROJECT_2_ASSAY_1 = "00001";
+    private static final String PROJECT_1_ASSAY_1 = "32411";
+    private static final String PROJECT_1_ASSAY_2 = "32416";
+    private static final String PROJECT_2_ASSAY_1 = "00001";
 
-    public static final String FILE_PRE = ";PRIDE_Exp_Complete_Ac_";
-    public static final String FILE_POST = ".xml;spectrum=";
+    private static final String FILE_PRE = ";PRIDE_Exp_Complete_Ac_";
+    private static final String FILE_POST = ".xml;spectrum=";
 
-    public static MZTabFile mzTabFileP1A1;
-    public static MZTabFile mzTabFileP1A2;
-    public static MZTabFile mzTabFileP2A1;
+    private static MZTabFile mzTabFileP1A1;
+    private static MZTabFile mzTabFileP1A2;
+    private static MZTabFile mzTabFileP2A1;
 
 
     public static final int NUM_ASSAYS = 2;

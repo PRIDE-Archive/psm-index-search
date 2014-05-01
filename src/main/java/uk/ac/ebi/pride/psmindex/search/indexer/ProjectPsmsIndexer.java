@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.psmindex.search.util;
+package uk.ac.ebi.pride.psmindex.search.indexer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,10 @@ import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
 import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
+import uk.ac.ebi.pride.psmindex.search.util.MzTabDataProviderReader;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -122,16 +120,15 @@ public class ProjectPsmsIndexer {
                 psms = MzTabDataProviderReader.readPsmsFromMzTabFile(projectAccession, assayAccession, mzTabFile);
             }
         } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
-            logger.error("Cannot get psms from project " + projectAccession + "and assay" + assayAccession + " in file" + mzTabFile);
+            logger.error("Cannot get psms from PROJECT:" + projectAccession + "and ASSAY:" + assayAccession );
             logger.error("Reason: ");
             e.printStackTrace();
         }
 
         endTime = System.currentTimeMillis();
         logger.info("Found " + psms.size() + " psms "
-                + " in file " + mzTabFile
-                + " for project " + projectAccession
-                + " and assay" + assayAccession
+                + " for PROJECT:" + projectAccession
+                + " and ASSAY:" + assayAccession
                 + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
 
         // add all PSMs to index
@@ -148,5 +145,12 @@ public class ProjectPsmsIndexer {
 
     }
 
+    public void deleteAllPsmsForProject(String projectAccession) {
+
+        // search by project accession
+        List<Psm> psms = this.psmSearchService.findByProjectAccession(projectAccession);
+        this.psmIndexService.delete(psms);
+
+    }
 
 }

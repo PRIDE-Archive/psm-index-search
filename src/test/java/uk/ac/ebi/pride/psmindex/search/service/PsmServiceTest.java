@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.psmindex;
+package uk.ac.ebi.pride.psmindex.search.service;
 
 /**
  * @author Jose A. Dianes
@@ -18,11 +18,11 @@ import org.junit.Test;
 import org.springframework.data.solr.core.SolrTemplate;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
-import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
-import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PsmServiceTest extends SolrTestCaseJ4 {
 

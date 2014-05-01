@@ -17,7 +17,7 @@ import uk.ac.ebi.pride.prider.repo.project.ProjectRepository;
 import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
 import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
 import uk.ac.ebi.pride.psmindex.search.util.ErrorLogOutputStream;
-import uk.ac.ebi.pride.psmindex.search.util.ProjectPsmsIndexer;
+import uk.ac.ebi.pride.psmindex.search.indexer.ProjectPsmsIndexer;
 
 import java.io.File;
 import java.io.IOException;
