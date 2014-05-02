@@ -9,6 +9,7 @@ import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIDGenerator;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
+import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,25 +92,26 @@ public class MzTabDataProviderReader {
 
         LinkedList<Psm> res = new LinkedList<Psm>();
 
-        for (PSM filePsm : mzTabPsms) {
-            String cleanPepSequence = PsmIdCleaner.cleanPeptideSequence(filePsm.getSequence());
+        for (PSM mzTabPsm : mzTabPsms) {
+            String cleanPepSequence = PsmIdCleaner.cleanPeptideSequence(mzTabPsm.getSequence());
 
             Psm newPsm = new Psm();
             newPsm.setId(
                     projectAccession + "_"
                             + assayAccession + "_"
-                            + filePsm.getPSM_ID() + "_"
-                            + filePsm.getAccession() + "_"
+                            + mzTabPsm.getPSM_ID() + "_"
+                            + mzTabPsm.getAccession() + "_"
                             + cleanPepSequence
             );
-            newPsm.setReportedId(filePsm.getPSM_ID());
-            newPsm.setSpectrumId(createSpectrumId(filePsm, projectAccession));
+            newPsm.setReportedId(mzTabPsm.getPSM_ID());
+            newPsm.setSpectrumId(createSpectrumId(mzTabPsm, projectAccession));
             newPsm.setPepSequence(cleanPepSequence);
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
-            newPsm.setProteinAccession(filePsm.getAccession());
+            String correctedAccession = getCorrectedAccession(mzTabPsm.getAccession(), mzTabPsm.getDatabase());
+            newPsm.setProteinAccession(correctedAccession);
             newPsm.setModifications(new LinkedList<String>());
-            for (Modification mod : filePsm.getModifications()) {
+            for (Modification mod : mzTabPsm.getModifications()) {
                 String modificationLine = new String();
 
                 for (Map.Entry<Integer, CVParam> modPosition : mod.getPositionMap().entrySet()) {
@@ -144,7 +146,7 @@ public class MzTabDataProviderReader {
             }
 
             //Unique
-            MZBoolean unique = filePsm.getUnique();
+            MZBoolean unique = mzTabPsm.getUnique();
             if (unique != null) {
                 newPsm.setUnique(MZBoolean.True.equals(unique));
             } else {
@@ -155,8 +157,8 @@ public class MzTabDataProviderReader {
             //For now we keep the same representation as it is in the mzTab line
             newPsm.setSearchEngine(new LinkedList<String>());
             //If the mzTab search engine can not be converted SplitList can be null
-            if (filePsm.getSearchEngine() != null) {
-                for (Param searchEngine : filePsm.getSearchEngine()) {
+            if (mzTabPsm.getSearchEngine() != null) {
+                for (Param searchEngine : mzTabPsm.getSearchEngine()) {
                     //The toString method is overridden in mzTab library to write the Param mzTab representation
                     newPsm.getSearchEngine().add(searchEngine.toString());
                 }
@@ -165,8 +167,8 @@ public class MzTabDataProviderReader {
             //Search Engine Score
             newPsm.setSearchEngineScore(new LinkedList<String>());
             //If the mzTab search engine can not be converted SplitList can be null
-            if (filePsm.getSearchEngineScore() != null) {
-                for (Param searchEngineScore : filePsm.getSearchEngineScore()) {
+            if (mzTabPsm.getSearchEngineScore() != null) {
+                for (Param searchEngineScore : mzTabPsm.getSearchEngineScore()) {
                     //The toString method is overridden in mzTab library to write the Param mzTab representation
                     newPsm.getSearchEngineScore().add(searchEngineScore.toString());
                 }
@@ -175,28 +177,28 @@ public class MzTabDataProviderReader {
             // Retention Time
             // NOTE: If the psm was discovered as a combination of several spectra, we will
             // simplify the case choosing only the first spectrum and the first retention time
-            SplitList<Double> retentionTimes = filePsm.getRetentionTime();
+            SplitList<Double> retentionTimes = mzTabPsm.getRetentionTime();
             if (retentionTimes != null && !retentionTimes.isEmpty()) {
                 newPsm.setRetentionTime(retentionTimes.get(0));
             }
 
-            newPsm.setCharge(filePsm.getCharge());
-            newPsm.setExpMassToCharge(filePsm.getExpMassToCharge());
-            newPsm.setCalculatedMassToCharge(filePsm.getCalcMassToCharge());
-            newPsm.setPreAminoAcid(filePsm.getPre());
-            newPsm.setPostAminoAcid(filePsm.getPost());
+            newPsm.setCharge(mzTabPsm.getCharge());
+            newPsm.setExpMassToCharge(mzTabPsm.getExpMassToCharge());
+            newPsm.setCalculatedMassToCharge(mzTabPsm.getCalcMassToCharge());
+            newPsm.setPreAminoAcid(mzTabPsm.getPre());
+            newPsm.setPostAminoAcid(mzTabPsm.getPost());
 
-            if(filePsm.getStart()!=null){
+            if(mzTabPsm.getStart()!=null){
                 try{
-                    newPsm.setStartPosition(Integer.parseInt(filePsm.getStart()));
+                    newPsm.setStartPosition(Integer.parseInt(mzTabPsm.getStart()));
                 } catch (NumberFormatException e){
                     logger.warn("The start position of the peptide can not be parsed as a Number", e);
                 }
             }
 
-            if(filePsm.getEnd()!=null){
+            if(mzTabPsm.getEnd()!=null){
                 try{
-                    newPsm.setEndPosition(Integer.parseInt(filePsm.getEnd()));
+                    newPsm.setEndPosition(Integer.parseInt(mzTabPsm.getEnd()));
                 } catch (NumberFormatException e){
                     logger.warn("The end position of the peptide can not be parsed as a Number", e);
                 }
@@ -261,5 +263,15 @@ public class MzTabDataProviderReader {
     private static String extractFileName(String filePath) {
         return FilenameUtils.getName(filePath);
     }
+
+    private static String getCorrectedAccession(String accession, String database) {
+
+        AccessionResolver accessionResolver = new AccessionResolver(accession, null, database); // we don't have versions
+        String fixedAccession = accessionResolver.getAccession();
+
+        logger.debug("Original accession " + accession + " fixed to " + fixedAccession);
+        return (fixedAccession==null)?accession:fixedAccession;
+    }
+
 
 }

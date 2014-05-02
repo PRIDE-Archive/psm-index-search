@@ -190,11 +190,18 @@
             <version>${prider.repo.version}</version>
         </dependency>
 
-        <!-- pride utils for spectrum id generation -->
+        <!-- prider utils for spectrum id generation -->
         <dependency>
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-utils</artifactId>
             <version>0.1.5</version>
+        </dependency>
+
+        <!-- pride utils for cleaning protein accessions -->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>accession-resolver</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>

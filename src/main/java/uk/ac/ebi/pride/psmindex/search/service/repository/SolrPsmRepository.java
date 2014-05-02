@@ -56,4 +56,12 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     @Query("reported_id:?0 AND assay_accession:?1")
     List<Psm> findByReportedIdAndAssayAccession(String reportedId, String assayAccession);
 
+    // Protein accession query methods
+    @Query("protein_accession:?0")
+    List<Psm> findByProteinAccession(String proteinAccession);
+    @Query("protein_accession:?0 AND project_accession:?1")
+    List<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession);
+    @Query("protein_accession:?0 AND assay_accession:?1")
+    List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession);
+
 }

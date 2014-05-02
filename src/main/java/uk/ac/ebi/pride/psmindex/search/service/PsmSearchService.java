@@ -98,4 +98,16 @@ public class PsmSearchService {
         return solrPsmRepository.findByReportedIdAndAssayAccession(reportedId, assayAccession);
     }
 
+    // Protein Accession query methods
+    public List<Psm> findByProteinAccession(String proteinAccession) {
+        return solrPsmRepository.findByProteinAccession(proteinAccession);
+    }
+
+    public List<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession) {
+        return solrPsmRepository.findByProteinAccessionAndProjectAccession(proteinAccession, projectAccession);
+    }
+
+    public List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession) {
+        return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession);
+    }
 }

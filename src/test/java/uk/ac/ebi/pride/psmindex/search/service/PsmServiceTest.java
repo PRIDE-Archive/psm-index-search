@@ -445,6 +445,47 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
+    public void testSearchByProteinAccession() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByProteinAccession(PROTEIN_1_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+
+    }
+
+    @Test
+    public void testSearchByProteinAccessionAndProjectAccessions() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByProteinAccessionAndProjectAccession(PROTEIN_1_ACCESSION, PROJECT_1_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+    }
+
+    @Test
+    public void testSearchByProteinAccessionAndAssaysAccession() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByProteinAccessionAndAssayAccession(PROTEIN_1_ACCESSION, ASSAY_1_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        Psm psm1 = psms.get(0);
+        assertEquals(PSM_1_ID, psm1.getId());
+
+    }
+
+    @Test
     public void testDeletePsm() throws SolrServerException {
         PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
