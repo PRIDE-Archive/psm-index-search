@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -109,5 +110,19 @@ public class PsmSearchService {
 
     public List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession) {
         return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession);
+    }
+
+    public List<String> findPeptideSequencesByProjectAccession(String projectAccession) {
+
+        List<String> peptideSequences = new ArrayList<String>();
+        List<Psm> psms = solrPsmRepository.findPeptideSequencesByProjectAccession(projectAccession);
+
+        if (psms != null) {
+            for (Psm psm : psms) {
+                peptideSequences.add(psm.getPepSequence());
+            }
+        }
+
+        return peptideSequences;
     }
 }

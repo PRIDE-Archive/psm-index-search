@@ -486,6 +486,20 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
+    public void testPeptideSequencesProjectionByProjectAccession() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<String> peptideSequences = psmSearchService.findPeptideSequencesByProjectAccession(PROJECT_1_ACCESSION);
+
+        assertNotNull(peptideSequences);
+        assertEquals(1, peptideSequences.size());
+
+        String sequence1 = peptideSequences.get(0);
+        assertEquals(PSM_1_SEQUENCE, sequence1);
+
+    }
+
+    @Test
     public void testDeletePsm() throws SolrServerException {
         PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
