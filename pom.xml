@@ -10,7 +10,7 @@
     <groupId>uk.ac.ebi.pride</groupId>
     <artifactId>psm-index-search</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>psm-index-search</name>
     <url>http://maven.apache.org</url>
 
@@ -38,9 +38,9 @@
     </organization>
 
     <scm>
-        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</developerConnection>
-        <url>https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</url>
+        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/tags/psm-index-search-0.1.0</connection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/tags/psm-index-search-0.1.0</developerConnection>
+        <url>https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/tags/psm-index-search-0.1.0</url>
     </scm>
 
     <properties>
