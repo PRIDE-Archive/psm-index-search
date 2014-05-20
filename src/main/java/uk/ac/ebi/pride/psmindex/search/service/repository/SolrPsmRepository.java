@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.psmindex.search.service.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
@@ -34,13 +36,20 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     List<Psm> findByProjectAccession(String projectAccession);
     @Query("project_accession:(?0)")
     List<Psm> findByProjectAccessionIn(Collection<String> projectAccessions);
-
+    @Query("project_accession:?0")
+    Page<Psm> findByProjectAccession(String projectAccession, Pageable pageable);
+    @Query("project_accession:(?0)")
+    Page<Psm> findByProjectAccessionIn(Collection<String> projectAccessions, Pageable pageable);
 
     // Assay accession query methods
     @Query("assay_accession:?0")
     List<Psm> findByAssayAccession(String assayAccession);
     @Query("assay_accession:(?0)")
     List<Psm> findByAssayAccessionIn(Collection<String> assayAccessions);
+    @Query("assay_accession:?0")
+    Page<Psm> findByAssayAccession(String assayAccession, Pageable pageable);
+    @Query("assay_accession:(?0)")
+    Page<Psm> findByAssayAccessionIn(Collection<String> assayAccessions, Pageable pageable);
 
     // Spectrum id query methods
     @Query("spectrum_id:?0")

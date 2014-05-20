@@ -48,6 +48,7 @@
     <properties>
         <prider.repo.version>0.1.13</prider.repo.version>
         <spring.version>3.2.5.RELEASE</spring.version>
+        <prider.service.version>1.0.0-SNAPSHOT</prider.service.version>
         <prider.data.provider.api.version>2.0.0-SNAPSHOT</prider.data.provider.api.version>
         <solrj.version>4.0.0</solrj.version>
         <spring.test.version>4.0.2.RELEASE</spring.test.version>
@@ -181,6 +182,12 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-test-framework</artifactId>
             <version>${solrj.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- PRIDE-R repo -->
@@ -194,7 +201,7 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.prider</groupId>
             <artifactId>prider-utils</artifactId>
-            <version>0.1.5</version>
+            <version>0.1.7</version>
         </dependency>
 
         <!-- pride utils for cleaning protein accessions -->
@@ -202,6 +209,12 @@
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>accession-resolver</artifactId>
             <version>1.0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -209,6 +222,12 @@
             <artifactId>jmztab</artifactId>
             <!-- based on mzTab specification version 1.0 RC5-->
             <version>2.1.7-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.psmindex.search.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
@@ -68,6 +70,14 @@ public class PsmSearchService {
         return solrPsmRepository.findByProjectAccessionIn(projectAccessions);
     }
 
+    public Page<Psm> findByProjectAccession(String projectAccession, Pageable pageable) {
+        return solrPsmRepository.findByProjectAccession(projectAccession, pageable);
+    }
+
+    public Page<Psm> findByProjectAccession(Collection<String> projectAccessions, Pageable pageable) {
+        return solrPsmRepository.findByProjectAccessionIn(projectAccessions, pageable);
+    }
+
     // Assay accession query methods
     public List<Psm> findByAssayAccession(String assayAccession) {
         return solrPsmRepository.findByAssayAccession(assayAccession);
@@ -75,6 +85,14 @@ public class PsmSearchService {
 
     public List<Psm> findByAssayAccession(Collection<String> assayAccessions) {
         return solrPsmRepository.findByAssayAccessionIn(assayAccessions);
+    }
+
+    public Page<Psm> findByAssayAccession(String assayAccession, Pageable pageable) {
+        return solrPsmRepository.findByAssayAccession(assayAccession, pageable);
+    }
+
+    public Page<Psm> findByAssayAccession(Collection<String> assayAccessions, Pageable pageable) {
+        return solrPsmRepository.findByAssayAccessionIn(assayAccessions, pageable);
     }
 
     // Spectrum id query methods
