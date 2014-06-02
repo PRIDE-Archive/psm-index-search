@@ -2,8 +2,8 @@ package uk.ac.ebi.pride.psmindex.search.tools;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import uk.ac.ebi.pride.prider.dataprovider.project.ProjectProvider;
-import uk.ac.ebi.pride.prider.repo.project.Project;
+import uk.ac.ebi.pride.archive.dataprovider.project.ProjectProvider;
+import uk.ac.ebi.pride.archive.repo.project.Project;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
