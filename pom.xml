@@ -15,13 +15,24 @@
     <url>http://maven.apache.org</url>
 
     <!--
-     To build the project several settings are required which are provided via maven profiles
-     These are:
-            db-pride-repo-pridearch-ro-user
-            db-pride-repo-pridepro
-            pride-archive-solr-cores  -> Configure the solr cores
-            pride3-submission-pipeline
- -->
+        To build the project use:
+            mvn clean package
+
+        Note: To use the code for index generation/updates (write access), maven profiles are needed:
+
+            db-pride-repo-pridepro (DB config to retrieve data to index)
+            db-pride-repo-pridearch-ro-user (DB user details)
+            pride-archive-solr-cores (config for the solr cores)
+            pride3-submission-pipeline (??)
+    -->
+
+    <licenses>
+        <license>
+            <name>The Apache Software License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -36,12 +47,6 @@
         <name>EMBL - European Bioinformatics Institute</name>
         <url>http://www.ebi.ac.uk</url>
     </organization>
-
-    <scm>
-        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</developerConnection>
-        <url>https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</url>
-    </scm>
 
     <properties>
         <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
@@ -155,6 +160,35 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!-- select this profile to build the indexer into its ZIP file -->
+        <profile>
+            <id>psm-indexer-assembly</id>
+            <build>
+                <plugins>
+                    <!--assembly to zip-->
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.basedir}/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
 
         <dependency>
@@ -235,7 +269,6 @@
 
     </dependencies>
 
-
     <repositories>
         <repository> <!-- EBI repo -->
             <id>nexus-ebi-repo</id>
@@ -247,51 +280,16 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository> <!-- EBI SNAPSHOT repo -->
-            <id>nexus-ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-
         <repository>
             <id>spring-maven-snapshot</id>
             <url>http://repo.springsource.org/libs-snapshot</url>
         </repository>
-
     </repositories>
 
-    <profiles>
-        <!-- select this profile to build the indexer into its ZIP file -->
-        <profile>
-            <id>psm-indexer-assembly</id>
-            <build>
-                <plugins>
-                    <!--assembly to zip-->
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>${project.basedir}/assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <scm>
+        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</connection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</developerConnection>
+        <url>https://svn.ebi.ac.uk/pride-repo/psm-index/psm-index-search/trunk</url>
+    </scm>
 
 </project>

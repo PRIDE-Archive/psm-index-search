@@ -15,6 +15,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
@@ -184,6 +185,21 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
             assertTrue(psm.getId().contentEquals(PSM_3_ID) || psm.getId().contentEquals(PSM_2_ID));
         }
 
+    }
+
+    @Test
+    public void testSearchByPeptideSequenceWithPaging() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        // first check that there are more than one result for the generic query
+        List<Psm> psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE);
+        assertNotNull(psms);
+        assertEquals(2, psms.size());
+
+        // then check that the page restriction to one result works
+        psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE, new PageRequest(1,1));
+        assertNotNull(psms);
+        assertEquals(1, psms.size()); // expect only one result instead of two
     }
 
     @Test
