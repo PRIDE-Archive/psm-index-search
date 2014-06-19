@@ -197,7 +197,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         assertEquals(2, psms.size());
 
         // then check that the page restriction to one result works
-        psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE, new PageRequest(1,1));
+        psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE, new PageRequest(1,1)).getContent();
         assertNotNull(psms);
         assertEquals(1, psms.size()); // expect only one result instead of two
     }

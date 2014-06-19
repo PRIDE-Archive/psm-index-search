@@ -29,7 +29,7 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     @Query("peptide_sequence:?0")
     List<Psm> findByPeptideSequence(String peptideSequence);
     @Query("peptide_sequence:?0")
-    List<Psm> findByPeptideSequence(String peptideSequence, Pageable pageable);
+    Page<Psm> findByPeptideSequence(String peptideSequence, Pageable pageable);
     @Query("peptide_sequence:?0 AND project_accession:?1")
     List<Psm> findByPeptideSequenceAndProjectAccessions(String peptideSequence, String projectAccession);
     @Query("peptide_sequence:?0 AND assay_accession:?1")
