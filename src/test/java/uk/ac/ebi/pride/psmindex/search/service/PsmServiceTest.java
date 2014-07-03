@@ -17,9 +17,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
+import uk.ac.ebi.pride.psmindex.search.model.Modification;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
+import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -66,10 +68,12 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     private static final String ASSAY_2_ACCESSION = "ASSAY-2-ACCESSION";
 
     //Modifications
-    private static final String MOD_1_POS = "3";
-    private static final String MOD_2_POS = "5";
-    private static final String MOD_1_ACCESSION = "MOD-00696";
-    private static final String MOD_2_ACCESSION = "MOD-00674";
+    private static final Integer MOD_1_POS = 3;
+    private static final Integer MOD_2_POS = 5;
+    private static final String MOD_1_ACCESSION = "MOD:00696";
+    private static final String MOD_2_ACCESSION = "MOD:00674";
+    private static final String MOD_TYPE = "MOD";
+
     private static final String MOD_1_NAME = "phosphorylated residue";
     private static final String MOD_2_NAME = "amidated residue";
 
@@ -554,15 +558,25 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         psm.setId(PSM_1_ID);
         psm.setReportedId(PSM_1_REPORTED_ID);
-        psm.setPepSequence(PSM_1_SEQUENCE);
+        psm.setPeptideSequence(PSM_1_SEQUENCE);
         psm.setSpectrumId(PSM_1_SPECTRUM);
         psm.setProteinAccession(PROTEIN_1_ACCESSION);
         psm.setProjectAccession(PROJECT_1_ACCESSION);
         psm.setAssayAccession(ASSAY_1_ACCESSION);
 
-        List<String> modifications = new LinkedList<String>();
-        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
-        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
+//        List<String> modifications = new LinkedList<String>();
+
+        Modification mod1 = new Modification();
+        mod1.addPosition(MOD_1_POS, null);
+        mod1.setAccession(MOD_1_ACCESSION);
+
+        Modification mod2 = new Modification();
+        mod2.addPosition(MOD_2_POS, null);
+        mod2.setAccession(MOD_2_ACCESSION);
+
+        List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
+        modifications.add(mod1);
+        modifications.add(mod2);
 
         psm.setModifications(modifications);
 
@@ -577,15 +591,23 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         psm.setId(PSM_2_ID);
         psm.setReportedId(PSM_2_REPORTED_ID);
-        psm.setPepSequence(PSM_2_SEQUENCE);
+        psm.setPeptideSequence(PSM_2_SEQUENCE);
         psm.setSpectrumId(PSM_2_SPECTRUM);
         psm.setProteinAccession(PROTEIN_2_ACCESSION);
         psm.setProjectAccession(PROJECT_2_ACCESSION);
         psm.setAssayAccession(ASSAY_2_ACCESSION);
 
-        List<String> modifications = new LinkedList<String>();
-        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
-        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
+        Modification mod1 = new Modification();
+        mod1.addPosition(MOD_1_POS, null);
+        mod1.setAccession(MOD_1_ACCESSION);
+
+        Modification mod2 = new Modification();
+        mod2.addPosition(MOD_2_POS, null);
+        mod2.setAccession(MOD_2_ACCESSION);
+
+        List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
+        modifications.add(mod1);
+        modifications.add(mod2);
 
         psm.setModifications(modifications);
 
@@ -598,15 +620,23 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         psm.setId(PSM_3_ID);
         psm.setReportedId(PSM_3_REPORTED_ID);
-        psm.setPepSequence(PSM_3_SEQUENCE);
+        psm.setPeptideSequence(PSM_3_SEQUENCE);
         psm.setSpectrumId(PSM_3_SPECTRUM);
         psm.setProteinAccession(PROTEIN_2_ACCESSION);
         psm.setProjectAccession(PROJECT_2_ACCESSION);
         psm.setAssayAccession(ASSAY_2_ACCESSION);
 
-        List<String> modifications = new LinkedList<String>();
-        modifications.add(MOD_1_POS + "-" + MOD_1_ACCESSION);
-        modifications.add(MOD_2_POS + "-" + MOD_2_ACCESSION);
+        Modification mod1 = new Modification();
+        mod1.addPosition(MOD_1_POS, null);
+        mod1.setAccession(MOD_1_ACCESSION);
+
+        Modification mod2 = new Modification();
+        mod2.addPosition(MOD_2_POS, null);
+        mod2.setAccession(MOD_2_ACCESSION);
+
+        List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
+        modifications.add(mod1);
+        modifications.add(mod2);
 
         psm.setModifications(modifications);
 

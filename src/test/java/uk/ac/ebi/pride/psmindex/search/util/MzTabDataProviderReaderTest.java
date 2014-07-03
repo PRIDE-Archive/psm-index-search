@@ -4,12 +4,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
+import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -82,21 +83,58 @@ public class MzTabDataProviderReaderTest {
 
         Psm firstPsm = psms.entrySet().iterator().next().getValue().getFirst();
 
-        assertEquals(firstPsm.getId(), "TST000121_00001_175_orf19/5636_QSTSSTPCPYWDTGCLCVMPQFAGAVGNCVAK");
-        assertEquals(firstPsm.getReportedId(), "175");
-        assertEquals(firstPsm.getSpectrumId(), "TST000121;result_1_sample_1_dat.pride.xml;spectrum=175");
-        assertEquals(firstPsm.getProteinAccession(), "orf19/5636");
+        assertEquals("TST000121_00001_175_orf19/5636_QSTSSTPCPYWDTGCLCVMPQFAGAVGNCVAK", firstPsm.getId());
+        assertEquals("175", firstPsm.getReportedId());
+        assertEquals("TST000121;result_1_sample_1_dat.pride.xml;spectrum=175", firstPsm.getSpectrumId());
+        assertEquals("orf19/5636", firstPsm.getProteinAccession());
         assertNull(firstPsm.isUnique());
-        assertEquals(firstPsm.getSearchEngine(), Arrays.asList("[MS, MS:1001207, Mascot, ]"));
-        assertEquals(firstPsm.getSearchEngineScore(), Arrays.asList("[PRIDE, PRIDE:0000069, Mascot score, 91.24]"));
-        assertEquals(firstPsm.getModifications(), Arrays.asList("8|15|17|29-MOD:01214"));
+
+        checkSearchEnginesScores(firstPsm.getSearchEngineScores());
+        checkSearchEngine(firstPsm.getSearchEngines());
+        checkModifications(firstPsm.getModifications());
+
         assertNull(firstPsm.getRetentionTime());
         assertNull(firstPsm.getCharge());
-        assertTrue(firstPsm.getExpMassToCharge() == 1183.8615);
+        assertEquals(1183.8615, firstPsm.getExpMassToCharge());
         assertNull(firstPsm.getCalculatedMassToCharge());
         assertNull(firstPsm.getPreAminoAcid());
         assertNull(firstPsm.getPostAminoAcid());
-        assertTrue(firstPsm.getStartPosition() == 61);
-        assertTrue(firstPsm.getEndPosition() == 92);
+        assertEquals((Integer) 61, firstPsm.getStartPosition());
+        assertEquals((Integer) 92, firstPsm.getEndPosition());
+    }
+
+    private void checkModifications(Iterable<ModificationProvider> modifications) {
+        ModificationProvider mod = modifications.iterator().next();
+        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals((Integer) 8, mod.getMainPosition());
+
+        mod = modifications.iterator().next();
+        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals((Integer) 15, mod.getMainPosition());
+
+        mod = modifications.iterator().next();
+        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals((Integer) 17, mod.getMainPosition());
+
+        mod = modifications.iterator().next();
+        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals((Integer) 29, mod.getMainPosition());
+    }
+
+    private void checkSearchEngine(Iterable<CvParamProvider> searchEngines) {
+        CvParamProvider cvParamProvider = searchEngines.iterator().next();
+        assertEquals("MS", cvParamProvider.getCvLabel());
+        assertEquals("MS:1001207", cvParamProvider.getAccession());
+        assertEquals("Mascot", cvParamProvider.getName());
+        assertEquals("", cvParamProvider.getValue());
+    }
+
+    private void checkSearchEnginesScores(Iterable<CvParamProvider> searchEngineScores) {
+        CvParamProvider cvParamProvider = searchEngineScores.iterator().next();
+
+        assertEquals("PRIDE", cvParamProvider.getCvLabel());
+        assertEquals("PRIDE:0000069", cvParamProvider.getAccession());
+        assertEquals("Mascot score", cvParamProvider.getName());
+        assertEquals("91.24", cvParamProvider.getValue());
     }
 }

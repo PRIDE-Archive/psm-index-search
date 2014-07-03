@@ -38,8 +38,8 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
     private static final int NUM_PSMS_P1A1 = 3;
     private static final int NUM_PSMS_P1A2 = 1;
 
-    private static final int NUM_PSMS_PROJECT_2 = 5;
-    private static final int NUM_PSMS_P2A1 = 5;
+    private static final int NUM_PSMS_PROJECT_2 = 7;
+    private static final int NUM_PSMS_P2A1 = 7;
 
     private static final String PSM3_ID = "3";
 

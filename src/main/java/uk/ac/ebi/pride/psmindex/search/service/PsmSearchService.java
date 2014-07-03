@@ -43,12 +43,15 @@ public class PsmSearchService {
     public List<Psm> findByPeptideSequence(String peptideSequence) {
         return solrPsmRepository.findByPeptideSequence(peptideSequence);
     }
+
     public Page<Psm> findByPeptideSequence(String peptideSequence, Pageable pageable) {
         return solrPsmRepository.findByPeptideSequence(peptideSequence, pageable);
     }
+
     public List<Psm> findByPeptideSubSequence(String peptideSequence) {
         return solrPsmRepository.findByPeptideSequence("*"+peptideSequence+"*");
     }
+
     public Page<Psm> findByPeptideSubSequence(String peptideSequence, Pageable pageable) {
         return solrPsmRepository.findByPeptideSequence("*"+peptideSequence+"*", pageable);
     }
@@ -143,7 +146,7 @@ public class PsmSearchService {
 
         if (psms != null) {
             for (Psm psm : psms) {
-                peptideSequences.add(psm.getPepSequence());
+                peptideSequences.add(psm.getPeptideSequence());
             }
         }
 

@@ -1,7 +1,13 @@
 package uk.ac.ebi.pride.psmindex.search.model;
 
 import org.apache.solr.client.solrj.beans.Field;
+import uk.ac.ebi.pride.archive.dataprovider.identification.PeptideSequenceProvider;
+import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
+import uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper;
+import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper;
+import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +15,8 @@ import java.util.List;
  * @version $Id$
  *
  */
-public class Psm {
+//TODO Define interface:  ModificationProvider
+public class Psm implements PeptideSequenceProvider {
 
     @Field(PsmFields.ID)
     private String id;
@@ -19,7 +26,7 @@ public class Psm {
     private String reportedId;
 
     @Field(PsmFields.PEPTIDE_SEQUENCE)
-    private String pepSequence;
+    private String peptideSequence;
 
     // If the psm was discovered as a combination of several spectra, we will
     // simplify the case choosing only the first spectrum
@@ -36,16 +43,16 @@ public class Psm {
     private String assayAccession;
 
     @Field(PsmFields.MODIFICATIONS)
-    private List<String> modifications;
+    private List<String> modificationsAsString;
 
     @Field(PsmFields.UNIQUE)
     private Boolean unique;
 
     @Field(PsmFields.SEARCH_ENGINE)
-    private List<String> searchEngine;
+    private List<String> searchEngineAsString;
 
     @Field(PsmFields.SEARCH_ENGINE_SCORE)
-    private List<String> searchEngineScore;
+    private List<String> searchEngineScoreAsString;
 
     // If the psm was discovered as a combination of several spectra, we will
     // simplify the case choosing only the first spectrum and the first retention time
@@ -73,6 +80,12 @@ public class Psm {
     @Field(PsmFields.END_POSITION)
     private Integer endPosition;
 
+    private List<CvParamProvider> searchEngineScores;
+
+    private List<CvParamProvider> searchEngines;
+
+    private List<ModificationProvider> modifications;
+
 
     public String getId() {
         return id;
@@ -90,12 +103,12 @@ public class Psm {
         this.reportedId = reportedId;
     }
 
-    public String getPepSequence() {
-        return pepSequence;
+    public String getPeptideSequence() {
+        return peptideSequence;
     }
 
-    public void setPepSequence(String pepSequence) {
-        this.pepSequence = pepSequence;
+    public void setPeptideSequence(String peptideSequence) {
+        this.peptideSequence = peptideSequence;
     }
 
     public String getSpectrumId() {
@@ -130,14 +143,6 @@ public class Psm {
         this.assayAccession = assayAccession;
     }
 
-    public List<String> getModifications() {
-        return modifications;
-    }
-
-    public void setModifications(List<String> modifications) {
-        this.modifications = modifications;
-    }
-
     public Boolean isUnique() {
         return unique;
     }
@@ -146,20 +151,106 @@ public class Psm {
         this.unique = unique;
     }
 
-    public List<String> getSearchEngine() {
-        return searchEngine;
+    public Iterable<CvParamProvider> getSearchEngines() {
+
+        for (String se : searchEngineAsString) {
+            searchEngines.add(CvParamHelper.convertFromString(se));
+        }
+
+        return searchEngines;
     }
 
-    public void setSearchEngine(List<String> searchEngine) {
-        this.searchEngine = searchEngine;
+    public void addSearchEngine(CvParamProvider searchEngine) {
+
+        if (searchEngines == null) {
+            searchEngines = new ArrayList<CvParamProvider>();
+        }
+
+        searchEngines.add(searchEngine);
+
+        if (searchEngineAsString == null) {
+            searchEngineAsString = new ArrayList<String>();
+        }
+
+        searchEngineAsString.add(CvParamHelper.convertToString(searchEngine));
     }
 
-    public List<String> getSearchEngineScore() {
-        return searchEngineScore;
+    public void setSearchEngines(List<CvParamProvider> searchEngines) {
+
+        List<String> searchEngineAsString = new ArrayList<String>();
+
+        for (CvParamProvider searchEngine : searchEngines) {
+            searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngine));
+        }
+
+        this.searchEngines = searchEngines;
+        this.searchEngineAsString = searchEngineAsString;
     }
 
-    public void setSearchEngineScore(List<String> searchEngineScore) {
-        this.searchEngineScore = searchEngineScore;
+
+    public Iterable<CvParamProvider> getSearchEngineScores() {
+
+        for (String ses : searchEngineScoreAsString) {
+            searchEngineScores.add(CvParamHelper.convertFromString(ses));
+        }
+
+        return searchEngineScores;
+    }
+
+    public void addSearchEngineScore(CvParamProvider searchEngineScore) {
+
+        if (searchEngineScores == null) {
+            searchEngineScores = new ArrayList<CvParamProvider>();
+        }
+
+        searchEngineScores.add(searchEngineScore);
+
+        if (searchEngineScoreAsString == null) {
+            searchEngineScoreAsString = new ArrayList<String>();
+        }
+
+        searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngineScore));
+    }
+
+    public void setSearchEngineScores(List<CvParamProvider> searchEngineScores) {
+
+        List<String> searchEngineScoreAsString = new ArrayList<String>();
+
+        for (CvParamProvider searchEngineScore : searchEngineScores) {
+            searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngineScore));
+        }
+
+        this.searchEngineScores = searchEngineScores;
+        this.searchEngineScoreAsString = searchEngineScoreAsString;
+    }
+
+    public Iterable<ModificationProvider> getModifications() {
+
+        for (String mod : modificationsAsString) {
+            modifications.add(ModificationHelper.convertFromString(mod));
+        }
+
+        return modifications;
+    }
+
+    public void addModification(ModificationProvider modification) {
+
+        if (modifications == null) {
+            modifications = new ArrayList<ModificationProvider>();
+        }
+
+        modifications.add(modification);
+
+        if (modificationsAsString == null) {
+            modificationsAsString = new ArrayList<String>();
+        }
+
+        modificationsAsString.add(ModificationHelper.convertToString(modification));
+
+    }
+
+    public void setModifications(List<ModificationProvider> modifications){
+
     }
 
     public Double getRetentionTime() {
@@ -225,4 +316,5 @@ public class Psm {
     public void setEndPosition(Integer endPosition) {
         this.endPosition = endPosition;
     }
+
 }

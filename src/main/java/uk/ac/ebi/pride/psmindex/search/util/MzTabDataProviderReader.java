@@ -3,12 +3,14 @@ package uk.ac.ebi.pride.psmindex.search.util;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
 import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIDGenerator;
 import uk.ac.ebi.pride.prider.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
+import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
 import java.io.File;
@@ -17,6 +19,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import static uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper.convertToModificationProvider;
+import static uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper.convertToCvParamProvider;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -52,7 +57,7 @@ public class MzTabDataProviderReader {
                     String assayAccession = tabFile.getName().split("[_\\.]")[4];
 
                     // get all psms from the file
-                    LinkedList<Psm> assayPsms = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), projectAccession, assayAccession);
+                    LinkedList<Psm> assayPsms = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), mzTabFile.getMetadata(), projectAccession, assayAccession);
 
                     // add assay psms to the result
                     res.put(assayAccession, assayPsms);
@@ -79,16 +84,16 @@ public class MzTabDataProviderReader {
 
         if (mzTabFile != null) {
 
-                // get all psms from the file
-                res = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), projectAccession, assayAccession);
-                logger.debug("Found " + res.size() + " psms for Assay " + assayAccession + " in file " + mzTabFile);
+            // get all psms from the file
+            res = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), mzTabFile.getMetadata(), projectAccession, assayAccession);
+            logger.debug("Found " + res.size() + " psms for Assay " + assayAccession + " in file " + mzTabFile);
 
         }
 
         return res;
     }
 
-    private static LinkedList<Psm> convertFromMzTabPsmsToPrideArchivePsms(Collection<PSM> mzTabPsms, String projectAccession, String assayAccession) {
+    private static LinkedList<Psm> convertFromMzTabPsmsToPrideArchivePsms(Collection<PSM> mzTabPsms, Metadata metadata, String projectAccession, String assayAccession) {
 
         LinkedList<Psm> res = new LinkedList<Psm>();
 
@@ -105,44 +110,19 @@ public class MzTabDataProviderReader {
             );
             newPsm.setReportedId(mzTabPsm.getPSM_ID());
             newPsm.setSpectrumId(createSpectrumId(mzTabPsm, projectAccession));
-            newPsm.setPepSequence(cleanPepSequence);
+            newPsm.setPeptideSequence(cleanPepSequence);
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
             String correctedAccession = getCorrectedAccession(mzTabPsm.getAccession(), mzTabPsm.getDatabase());
             newPsm.setProteinAccession(correctedAccession);
-            newPsm.setModifications(new LinkedList<String>());
-            for (Modification mod : mzTabPsm.getModifications()) {
-                String modificationLine = new String();
 
-                for (Map.Entry<Integer, CVParam> modPosition : mod.getPositionMap().entrySet()) {
-                    modificationLine = modificationLine + modPosition.getKey();
-                    if (modPosition.getValue() != null) {
-                        CVParam posCvParam = modPosition.getValue();
-
-                        modificationLine = modificationLine + "["
-                                + posCvParam.getCvLabel() + ","
-                                + posCvParam.getAccession() + ","
-                                + posCvParam.getName() + ","
-                                + posCvParam.getValue()
-                                + "]";
-                    }
-                    modificationLine = modificationLine + "|";
+            newPsm.setModifications(new LinkedList<ModificationProvider>());
+            //Modifications
+            if (mzTabPsm.getModifications() != null) {
+                //Using the writer for the library
+                for (Modification mod : mzTabPsm.getModifications()) {
+                    newPsm.addModification(convertToModificationProvider(mod));
                 }
-                if (modificationLine.length() > 0)
-                    modificationLine = modificationLine.substring(0, modificationLine.length() - 1); // remove the last |
-
-                modificationLine = modificationLine + "-";
-
-                String modAccession = mod.getAccession();
-                if (!mod.getAccession().startsWith("MOD")) {
-                    modAccession = "MOD:" + modAccession;
-                }
-                modificationLine = modificationLine + modAccession;
-
-                newPsm.getModifications().add(modificationLine);
-
-                // as an alternative we can call the mzTab method to write it back
-                // newPsm.getModifications().add(mod.toString());
             }
 
             //Unique
@@ -155,22 +135,28 @@ public class MzTabDataProviderReader {
 
             //Search Engine
             //For now we keep the same representation as it is in the mzTab line
-            newPsm.setSearchEngine(new LinkedList<String>());
+            newPsm.setSearchEngines(new LinkedList<CvParamProvider>());
             //If the mzTab search engine can not be converted SplitList can be null
-            if (mzTabPsm.getSearchEngine() != null) {
+            if (mzTabPsm.getSearchEngine() != null && !mzTabPsm.getSearchEngine().isEmpty()) {
                 for (Param searchEngine : mzTabPsm.getSearchEngine()) {
-                    //The toString method is overridden in mzTab library to write the Param mzTab representation
-                    newPsm.getSearchEngine().add(searchEngine.toString());
+                    newPsm.addSearchEngine(convertToCvParamProvider(searchEngine));
                 }
             }
 
             //Search Engine Score
-            newPsm.setSearchEngineScore(new LinkedList<String>());
+            newPsm.setSearchEngineScores(new LinkedList<CvParamProvider>());
             //If the mzTab search engine can not be converted SplitList can be null
-            if (mzTabPsm.getSearchEngineScore() != null) {
-                for (Param searchEngineScore : mzTabPsm.getSearchEngineScore()) {
-                    //The toString method is overridden in mzTab library to write the Param mzTab representation
-                    newPsm.getSearchEngineScore().add(searchEngineScore.toString());
+
+            if (metadata.getPsmSearchEngineScoreMap() != null && !metadata.getPsmSearchEngineScoreMap().isEmpty()) {
+                for (PSMSearchEngineScore psmSearchEngineScore : metadata.getPsmSearchEngineScoreMap().values()) {
+                    if (mzTabPsm.getSearchEngineScore(psmSearchEngineScore.getId()) != null) {
+                        // We create a Param as the composition between the searchEngineScore stored in the metadata and
+                        // the search engine score value stored in the psm
+                        Param param = psmSearchEngineScore.getParam();
+                        String value = mzTabPsm.getSearchEngineScore(psmSearchEngineScore.getId()).toString();
+                        newPsm.addSearchEngineScore(convertToCvParamProvider(param.getCvLabel(), param.getAccession(), param.getName(), value));
+
+                    }
                 }
             }
 
@@ -188,20 +174,12 @@ public class MzTabDataProviderReader {
             newPsm.setPreAminoAcid(mzTabPsm.getPre());
             newPsm.setPostAminoAcid(mzTabPsm.getPost());
 
-            if(mzTabPsm.getStart()!=null){
-                try{
-                    newPsm.setStartPosition(Integer.parseInt(mzTabPsm.getStart()));
-                } catch (NumberFormatException e){
-                    logger.warn("The start position of the peptide can not be parsed as a Number", e);
-                }
+            if (mzTabPsm.getStart() != null) {
+                newPsm.setStartPosition(mzTabPsm.getStart());
             }
 
-            if(mzTabPsm.getEnd()!=null){
-                try{
-                    newPsm.setEndPosition(Integer.parseInt(mzTabPsm.getEnd()));
-                } catch (NumberFormatException e){
-                    logger.warn("The end position of the peptide can not be parsed as a Number", e);
-                }
+            if (mzTabPsm.getEnd() != null) {
+                newPsm.setEndPosition(mzTabPsm.getEnd());
             }
 
             res.add(newPsm);
@@ -270,7 +248,7 @@ public class MzTabDataProviderReader {
         String fixedAccession = accessionResolver.getAccession();
 
         logger.debug("Original accession " + accession + " fixed to " + fixedAccession);
-        return (fixedAccession==null)?accession:fixedAccession;
+        return (fixedAccession == null) ? accession : fixedAccession;
     }
 
 
