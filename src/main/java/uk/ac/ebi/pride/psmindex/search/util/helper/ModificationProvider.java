@@ -11,8 +11,6 @@ import java.util.Map;
  */
 public interface ModificationProvider {
 
-    public String getType();
-
     public String getAccession();
 
     public Integer getMainPosition();

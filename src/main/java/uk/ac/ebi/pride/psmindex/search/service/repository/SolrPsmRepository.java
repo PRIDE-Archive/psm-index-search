@@ -2,6 +2,8 @@ package uk.ac.ebi.pride.psmindex.search.service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.result.FacetPage;
+import org.springframework.data.solr.repository.Facet;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
@@ -80,5 +82,17 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     //Projection for peptide sequence
     @Query(fields = { "peptide_sequence"})
     List<Psm> findPeptideSequencesByProjectAccession(String projectAccession);
+
+    @Query("project_accession:?0 AND assay_accession:?1")
+    @Facet(pivotFields = ("peptide_sequence,modifications"))
+    FacetPage<Psm> findByProjectAccessionAndAssayAccessionPivotOnPeptideSequenceVsModifications(String projectAccession, String assayAccession, Pageable pageable);
+
+    @Query("protein_accession:?0 AND project_accession:?1")
+    @Facet(pivotFields = ("peptide_sequence,modifications"))
+    FacetPage<Psm> findByProteinAccessionAndProjectAccessionPivotOnPeptideSequenceVsModifications(String proteinAccession, String projectAccession, Pageable pageable);
+
+    @Query("protein_accession:?0 AND assay_accession:?1")
+    @Facet(pivotFields = ("peptide_sequence,modifications"))
+    FacetPage<Psm> findByProteinAccessionAndAssayAccessionPivotOnPeptideSequenceVsModifications(String proteinAccession, String assayAccession, Pageable pageable);
 
 }

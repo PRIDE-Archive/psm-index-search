@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.psmindex.search.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
@@ -152,4 +153,15 @@ public class PsmSearchService {
 
         return peptideSequences;
     }
+
+    //TODO: Change the return type
+    public FacetPage<Psm> findPeptidesByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession, Pageable pageable){
+        return solrPsmRepository.findByProteinAccessionAndProjectAccessionPivotOnPeptideSequenceVsModifications(proteinAccession, projectAccession, pageable);
+    }
+
+    //TODO: Change the return type
+    public FacetPage<Psm> findPeptidesByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession, Pageable pageable){
+        return solrPsmRepository.findByProteinAccessionAndAssayAccessionPivotOnPeptideSequenceVsModifications(proteinAccession, assayAccession, pageable);
+    }
+
 }

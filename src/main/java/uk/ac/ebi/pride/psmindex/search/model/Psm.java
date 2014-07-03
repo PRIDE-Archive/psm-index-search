@@ -8,12 +8,12 @@ import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper;
 import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
  * @version $Id$
- *
  */
 //TODO Define interface:  ModificationProvider
 public class Psm implements PeptideSequenceProvider {
@@ -79,12 +79,6 @@ public class Psm implements PeptideSequenceProvider {
 
     @Field(PsmFields.END_POSITION)
     private Integer endPosition;
-
-    private List<CvParamProvider> searchEngineScores;
-
-    private List<CvParamProvider> searchEngines;
-
-    private List<ModificationProvider> modifications;
 
 
     public String getId() {
@@ -153,6 +147,8 @@ public class Psm implements PeptideSequenceProvider {
 
     public Iterable<CvParamProvider> getSearchEngines() {
 
+        List<CvParamProvider> searchEngines = new LinkedList<CvParamProvider>();
+
         for (String se : searchEngineAsString) {
             searchEngines.add(CvParamHelper.convertFromString(se));
         }
@@ -160,56 +156,36 @@ public class Psm implements PeptideSequenceProvider {
         return searchEngines;
     }
 
-    public void addSearchEngine(CvParamProvider searchEngine) {
-
-        if (searchEngines == null) {
-            searchEngines = new ArrayList<CvParamProvider>();
-        }
-
-        searchEngines.add(searchEngine);
-
-        if (searchEngineAsString == null) {
-            searchEngineAsString = new ArrayList<String>();
-        }
-
-        searchEngineAsString.add(CvParamHelper.convertToString(searchEngine));
-    }
-
     public void setSearchEngines(List<CvParamProvider> searchEngines) {
 
-        List<String> searchEngineAsString = new ArrayList<String>();
+        List<String> searchEngineAsString = new LinkedList<String>();
 
         for (CvParamProvider searchEngine : searchEngines) {
             searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngine));
         }
 
-        this.searchEngines = searchEngines;
         this.searchEngineAsString = searchEngineAsString;
     }
 
+    public void addSearchEngine(CvParamProvider searchEngine) {
+
+        if (searchEngineAsString == null) {
+            searchEngineAsString = new LinkedList<String>();
+        }
+
+        searchEngineAsString.add(CvParamHelper.convertToString(searchEngine));
+    }
 
     public Iterable<CvParamProvider> getSearchEngineScores() {
+
+        List<CvParamProvider> searchEngineScores = new ArrayList<CvParamProvider>();
+
 
         for (String ses : searchEngineScoreAsString) {
             searchEngineScores.add(CvParamHelper.convertFromString(ses));
         }
 
         return searchEngineScores;
-    }
-
-    public void addSearchEngineScore(CvParamProvider searchEngineScore) {
-
-        if (searchEngineScores == null) {
-            searchEngineScores = new ArrayList<CvParamProvider>();
-        }
-
-        searchEngineScores.add(searchEngineScore);
-
-        if (searchEngineScoreAsString == null) {
-            searchEngineScoreAsString = new ArrayList<String>();
-        }
-
-        searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngineScore));
     }
 
     public void setSearchEngineScores(List<CvParamProvider> searchEngineScores) {
@@ -220,11 +196,21 @@ public class Psm implements PeptideSequenceProvider {
             searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngineScore));
         }
 
-        this.searchEngineScores = searchEngineScores;
         this.searchEngineScoreAsString = searchEngineScoreAsString;
     }
 
+    public void addSearchEngineScore(CvParamProvider searchEngineScore) {
+
+        if (searchEngineScoreAsString == null) {
+            searchEngineScoreAsString = new ArrayList<String>();
+        }
+
+        searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngineScore));
+    }
+
     public Iterable<ModificationProvider> getModifications() {
+
+        List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
 
         for (String mod : modificationsAsString) {
             modifications.add(ModificationHelper.convertFromString(mod));
@@ -233,24 +219,24 @@ public class Psm implements PeptideSequenceProvider {
         return modifications;
     }
 
-    public void addModification(ModificationProvider modification) {
+    public void setModifications(List<ModificationProvider> modifications) {
 
-        if (modifications == null) {
-            modifications = new ArrayList<ModificationProvider>();
+        List<String> modificationsAsString = new LinkedList<String>();
+
+        for (ModificationProvider modification : modifications) {
+            modificationsAsString.add(ModificationHelper.convertToString(modification));
         }
 
-        modifications.add(modification);
+        this.modificationsAsString = modificationsAsString;
+    }
+
+    public void addModification(ModificationProvider modification) {
 
         if (modificationsAsString == null) {
-            modificationsAsString = new ArrayList<String>();
+            modificationsAsString = new LinkedList<String>();
         }
 
         modificationsAsString.add(ModificationHelper.convertToString(modification));
-
-    }
-
-    public void setModifications(List<ModificationProvider> modifications){
-
     }
 
     public Double getRetentionTime() {

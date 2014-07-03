@@ -17,6 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.result.FacetPage;
+import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
 import uk.ac.ebi.pride.psmindex.search.model.Modification;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
@@ -72,7 +74,6 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     private static final Integer MOD_2_POS = 5;
     private static final String MOD_1_ACCESSION = "MOD:00696";
     private static final String MOD_2_ACCESSION = "MOD:00674";
-    private static final String MOD_TYPE = "MOD";
 
     private static final String MOD_1_NAME = "phosphorylated residue";
     private static final String MOD_2_NAME = "amidated residue";
@@ -516,6 +517,24 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         String sequence1 = peptideSequences.get(0);
         assertEquals(PSM_1_SEQUENCE, sequence1);
+
+    }
+
+    @Test
+    public void testFindPeptides() throws SolrServerException {
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        FacetPage<Psm> peptides = psmSearchService.findPeptidesByProteinAccessionAndAssayAccession(PROTEIN_2_ACCESSION, ASSAY_2_ACCESSION, new PageRequest(0, 10));
+        assertNotNull(peptides);
+
+        List<FacetPivotFieldEntry> pivot = peptides.getPivot("peptide_sequence,modifications");
+        assertNotNull(pivot);
+        assertEquals(2,pivot.toArray().length);
+
+        peptides = psmSearchService.findPeptidesByProteinAccessionAndProjectAccession(PROTEIN_2_ACCESSION, PROJECT_2_ACCESSION, new PageRequest(0, 10));
+        pivot = peptides.getPivot("peptide_sequence,modifications");
+        assertNotNull(pivot);
+        assertEquals(2,pivot.toArray().length);
 
     }
 

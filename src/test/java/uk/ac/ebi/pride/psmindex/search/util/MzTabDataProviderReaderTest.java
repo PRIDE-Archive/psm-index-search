@@ -12,6 +12,7 @@ import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -104,19 +105,21 @@ public class MzTabDataProviderReaderTest {
     }
 
     private void checkModifications(Iterable<ModificationProvider> modifications) {
-        ModificationProvider mod = modifications.iterator().next();
+        Iterator<ModificationProvider> iterator = modifications.iterator();
+
+        ModificationProvider mod = iterator.next();
         assertEquals("MOD:01214", mod.getAccession());
         assertEquals((Integer) 8, mod.getMainPosition());
 
-        mod = modifications.iterator().next();
+        mod = iterator.next();
         assertEquals("MOD:01214", mod.getAccession());
         assertEquals((Integer) 15, mod.getMainPosition());
 
-        mod = modifications.iterator().next();
+        mod = iterator.next();
         assertEquals("MOD:01214", mod.getAccession());
         assertEquals((Integer) 17, mod.getMainPosition());
 
-        mod = modifications.iterator().next();
+        mod = iterator.next();
         assertEquals("MOD:01214", mod.getAccession());
         assertEquals((Integer) 29, mod.getMainPosition());
     }

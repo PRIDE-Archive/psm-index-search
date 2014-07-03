@@ -16,7 +16,6 @@ public class Modification implements ModificationProvider {
     private String accession;
     private Integer mainPosition;
     private Map<Integer, CvParamProvider> positionMap = new TreeMap<Integer, CvParamProvider>();
-    private String type;
     private CvParamProvider neutralLoss;
 
 
@@ -54,15 +53,6 @@ public class Modification implements ModificationProvider {
 
     public void setPositionMap(Map<Integer, CvParamProvider> positionMap) {
         this.positionMap = positionMap;
-    }
-
-    @Override
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public CvParamProvider getNeutralLoss() {
