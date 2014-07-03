@@ -149,14 +149,19 @@ public class Psm implements PeptideSequenceProvider {
 
         List<CvParamProvider> searchEngines = new LinkedList<CvParamProvider>();
 
-        for (String se : searchEngineAsString) {
-            searchEngines.add(CvParamHelper.convertFromString(se));
+        if (searchEngineAsString != null) {
+            for (String se : searchEngineAsString) {
+                searchEngines.add(CvParamHelper.convertFromString(se));
+            }
         }
 
         return searchEngines;
     }
 
     public void setSearchEngines(List<CvParamProvider> searchEngines) {
+
+        if (searchEngines == null)
+            return;
 
         List<String> searchEngineAsString = new LinkedList<String>();
 
@@ -180,15 +185,19 @@ public class Psm implements PeptideSequenceProvider {
 
         List<CvParamProvider> searchEngineScores = new ArrayList<CvParamProvider>();
 
-
-        for (String ses : searchEngineScoreAsString) {
-            searchEngineScores.add(CvParamHelper.convertFromString(ses));
+        if (searchEngineScoreAsString != null) {
+            for (String ses : searchEngineScoreAsString) {
+                searchEngineScores.add(CvParamHelper.convertFromString(ses));
+            }
         }
 
         return searchEngineScores;
     }
 
     public void setSearchEngineScores(List<CvParamProvider> searchEngineScores) {
+
+        if (searchEngineScores == null)
+            return;
 
         List<String> searchEngineScoreAsString = new ArrayList<String>();
 
@@ -212,14 +221,19 @@ public class Psm implements PeptideSequenceProvider {
 
         List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
 
-        for (String mod : modificationsAsString) {
-            modifications.add(ModificationHelper.convertFromString(mod));
+        if (modificationsAsString != null) {
+            for (String mod : modificationsAsString) {
+                modifications.add(ModificationHelper.convertFromString(mod));
+            }
         }
 
         return modifications;
     }
 
     public void setModifications(List<ModificationProvider> modifications) {
+
+        if (modifications == null)
+            return;
 
         List<String> modificationsAsString = new LinkedList<String>();
 
