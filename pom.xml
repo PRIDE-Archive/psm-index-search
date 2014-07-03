@@ -51,7 +51,6 @@
     <properties>
         <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
         <spring.version>3.2.5.RELEASE</spring.version>
-        <prider.service.version>1.0.0-SNAPSHOT</prider.service.version>
         <archive.data.provider.api.version>2.0.1-SNAPSHOT</archive.data.provider.api.version>
         <solrj.version>4.0.0</solrj.version>
         <spring.test.version>4.0.2.RELEASE</spring.test.version>
