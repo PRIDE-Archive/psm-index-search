@@ -3,14 +3,14 @@ package uk.ac.ebi.pride.psmindex.search.util;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
+import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIDGenerator;
+import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
-import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIDGenerator;
-import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
-import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
 import java.io.File;
@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper.convertToModificationProvider;
 import static uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper.convertToCvParamProvider;
+import static uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper.convertToModificationProvider;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -109,6 +109,7 @@ public class MzTabDataProviderReader {
                             + cleanPepSequence
             );
             newPsm.setReportedId(mzTabPsm.getPSM_ID());
+            //TODO: REMOVE the clean protein ac to be compatible with the project index
             newPsm.setSpectrumId(createSpectrumId(mzTabPsm, projectAccession));
             newPsm.setPeptideSequence(cleanPepSequence);
             newPsm.setProjectAccession(projectAccession);

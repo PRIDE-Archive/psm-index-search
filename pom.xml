@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.ac.ebi.pride.maven</groupId>
         <artifactId>pride-base-master</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <groupId>uk.ac.ebi.pride</groupId>
@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
     <version>0.1.3-SNAPSHOT</version>
     <name>psm-index-search</name>
-    <url>http://maven.apache.org</url>
+    <url>http://www.ebi.ac.uk/pride</url>
 
     <!--
         To build the project use:
@@ -50,10 +50,8 @@
 
     <properties>
         <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
-        <spring.version>3.2.5.RELEASE</spring.version>
-        <archive.data.provider.api.version>2.0.1-SNAPSHOT</archive.data.provider.api.version>
-        <solrj.version>4.0.0</solrj.version>
-        <spring.test.version>4.0.2.RELEASE</spring.test.version>
+        <archive.data.provider.api.version>2.0.3</archive.data.provider.api.version>
+        <archive.utils.version>0.1.10</archive.utils.version>
     </properties>
 
     <build>
@@ -194,51 +192,31 @@
 
     <dependencies>
 
+        <!--archive data provider-->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.test.version}</version>
-            <scope>test</scope>
+            <groupId>uk.ac.ebi.pride.archive</groupId>
+            <artifactId>archive-data-provider-api</artifactId>
+            <version>${archive.data.provider.api.version}</version>
         </dependency>
 
-        <!-- spring-data solr-->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-solr</artifactId>
-            <version>1.2.1.RELEASE</version>
-        </dependency>
-
-        <!--SolrJ-->
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>${solrj.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-test-framework</artifactId>
-            <version>${solrj.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-jdk14</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- PRIDE-R repo -->
+        <!-- archive repo -->
         <dependency>
             <groupId>uk.ac.ebi.pride.archive</groupId>
             <artifactId>archive-repo</artifactId>
             <version>${archive.repo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- prider utils for spectrum id generation -->
+        <!-- archive utils for spectrum id generation -->
         <dependency>
             <groupId>uk.ac.ebi.pride.archive</groupId>
             <artifactId>archive-utils</artifactId>
-            <version>0.1.10</version>
+            <version>${archive.utils.version}</version>
         </dependency>
 
         <!-- pride utils for cleaning protein accessions -->
@@ -272,10 +250,29 @@
             <artifactId>jmztab-modular-util</artifactId>
             <!-- based on mzTab specification version 1.0 RC5-->
             <version>2.1.8-SNAPSHOT</version>
+        </dependency>
+
+        <!-- spring-data solr-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-solr</artifactId>
+        </dependency>
+
+        <!--SolrJ-->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>${solrj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-test-framework</artifactId>
+            <version>${solrj.version}</version>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -283,6 +280,13 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>oracle-thin</artifactId>
+        </dependency>
+
+        <!--test-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

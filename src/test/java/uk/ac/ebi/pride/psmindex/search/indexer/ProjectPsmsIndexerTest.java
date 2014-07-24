@@ -16,7 +16,6 @@ import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
 import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
 import uk.ac.ebi.pride.psmindex.search.util.ErrorLogOutputStream;
-import uk.ac.ebi.pride.psmindex.search.util.MzTabDataProviderReaderTest;
 
 import java.io.File;
 import java.util.Collection;
@@ -24,7 +23,7 @@ import java.util.Collection;
 public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
 
 
-    private static Logger logger = LoggerFactory.getLogger(MzTabDataProviderReaderTest.class);
+    private static Logger logger = LoggerFactory.getLogger(ProjectPsmsIndexerTest.class);
     private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
 
     private static final String PROJECT_1_ACCESSION = "PXD000581";

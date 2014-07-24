@@ -19,10 +19,10 @@
     </appender>
 
     <!--override to INFO level in all pride -->
-    <logger name="uk.ac.ebi.pride.psmindex.search" level="DEBUG"/>
+    <logger name="uk.ac.ebi.pride.psmindex.search" level="INFO"/>
     <logger name="org.springframework" level="ERROR"/>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

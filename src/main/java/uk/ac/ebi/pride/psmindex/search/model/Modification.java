@@ -1,7 +1,7 @@
 package uk.ac.ebi.pride.psmindex.search.model;
 
+import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
-import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.util.Map;
 import java.util.TreeMap;

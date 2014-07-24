@@ -1,21 +1,19 @@
 package uk.ac.ebi.pride.psmindex.search.model;
 
 import org.apache.solr.client.solrj.beans.Field;
+import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.archive.dataprovider.identification.PeptideSequenceProvider;
 import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
 import uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper;
 import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper;
-import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationProvider;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
  * @version $Id$
  */
-//TODO Define interface:  ModificationProvider
 public class Psm implements PeptideSequenceProvider {
 
     @Field(PsmFields.ID)
@@ -147,7 +145,7 @@ public class Psm implements PeptideSequenceProvider {
 
     public Iterable<CvParamProvider> getSearchEngines() {
 
-        List<CvParamProvider> searchEngines = new LinkedList<CvParamProvider>();
+        List<CvParamProvider> searchEngines = new ArrayList<CvParamProvider>();
 
         if (searchEngineAsString != null) {
             for (String se : searchEngineAsString) {
@@ -163,7 +161,7 @@ public class Psm implements PeptideSequenceProvider {
         if (searchEngines == null)
             return;
 
-        List<String> searchEngineAsString = new LinkedList<String>();
+        List<String> searchEngineAsString = new ArrayList<String>();
 
         for (CvParamProvider searchEngine : searchEngines) {
             searchEngineScoreAsString.add(CvParamHelper.convertToString(searchEngine));
@@ -175,7 +173,7 @@ public class Psm implements PeptideSequenceProvider {
     public void addSearchEngine(CvParamProvider searchEngine) {
 
         if (searchEngineAsString == null) {
-            searchEngineAsString = new LinkedList<String>();
+            searchEngineAsString = new ArrayList<String>();
         }
 
         searchEngineAsString.add(CvParamHelper.convertToString(searchEngine));
@@ -219,11 +217,13 @@ public class Psm implements PeptideSequenceProvider {
 
     public Iterable<ModificationProvider> getModifications() {
 
-        List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
+        List<ModificationProvider> modifications = new ArrayList<ModificationProvider>();
 
         if (modificationsAsString != null) {
             for (String mod : modificationsAsString) {
-                modifications.add(ModificationHelper.convertFromString(mod));
+                if(!mod.isEmpty()) {
+                    modifications.add(ModificationHelper.convertFromString(mod));
+                }
             }
         }
 
@@ -235,7 +235,7 @@ public class Psm implements PeptideSequenceProvider {
         if (modifications == null)
             return;
 
-        List<String> modificationsAsString = new LinkedList<String>();
+        List<String> modificationsAsString = new ArrayList<String>();
 
         for (ModificationProvider modification : modifications) {
             modificationsAsString.add(ModificationHelper.convertToString(modification));
@@ -247,7 +247,7 @@ public class Psm implements PeptideSequenceProvider {
     public void addModification(ModificationProvider modification) {
 
         if (modificationsAsString == null) {
-            modificationsAsString = new LinkedList<String>();
+            modificationsAsString = new ArrayList<String>();
         }
 
         modificationsAsString.add(ModificationHelper.convertToString(modification));

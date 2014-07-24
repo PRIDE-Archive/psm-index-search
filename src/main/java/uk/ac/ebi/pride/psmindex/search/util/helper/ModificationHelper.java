@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.psmindex.search.util.helper;
 
+import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
 import uk.ac.ebi.pride.jmztab.model.CVParam;
 import uk.ac.ebi.pride.jmztab.model.MZTabUtils;
@@ -36,6 +37,7 @@ public class ModificationHelper {
         if (mzTabMod == null)
             return null;
 
+        //TODO: Handle the neutral loss cases
         Modification modification = new Modification();
         modification.setAccession(mzTabMod.getType().name() + SPLIT_CHAR + mzTabMod.getAccession());
 
@@ -52,7 +54,7 @@ public class ModificationHelper {
     }
 
 
-    protected static uk.ac.ebi.pride.jmztab.model.Modification convertFromModification(ModificationProvider modification) {
+    private static uk.ac.ebi.pride.jmztab.model.Modification convertFromModification(ModificationProvider modification) {
 
         if (modification == null)
             return null;
