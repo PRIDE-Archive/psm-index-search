@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -11,8 +13,6 @@
     <artifactId>psm-index-search</artifactId>
     <packaging>jar</packaging>
     <version>0.1.3-SNAPSHOT</version>
-    <name>psm-index-search</name>
-    <url>http://www.ebi.ac.uk/pride</url>
 
     <!--
         To build the project use:
@@ -49,9 +49,11 @@
     </organization>
 
     <properties>
-        <archive.repo.version>0.1.17-SNAPSHOT</archive.repo.version>
+        <archive.repo.version>0.1.18</archive.repo.version>
         <archive.data.provider.api.version>2.0.3</archive.data.provider.api.version>
+        <pride.accession.resolver.version>1.0.1</pride.accession.resolver.version>
         <archive.utils.version>0.1.10</archive.utils.version>
+        <jmztab.version>3.0.0</jmztab.version>
     </properties>
 
     <build>
@@ -191,6 +193,7 @@
     </profiles>
 
     <dependencies>
+        <!-- ##### PRIDE dependencies ##### ##### ##### ##### ##### -->
 
         <!--archive data provider-->
         <dependency>
@@ -223,7 +226,7 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>accession-resolver</artifactId>
-            <version>1.0.1</version>
+            <version>${pride.accession.resolver.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -232,11 +235,11 @@
             </exclusions>
         </dependency>
 
+        <!-- jmzTab -->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>jmztab-modular-model</artifactId>
-            <!-- based on mzTab specification version 1.0 RC5-->
-            <version>2.1.8-SNAPSHOT</version>
+            <version>${jmztab.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -244,14 +247,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>jmztab-modular-util</artifactId>
-            <!-- based on mzTab specification version 1.0 RC5-->
-            <version>2.1.8-SNAPSHOT</version>
+            <version>${jmztab.version}</version>
         </dependency>
 
+        <!-- ##### 3rd party dependencies ##### ##### ##### ##### ##### -->
         <!-- spring-data solr-->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -277,16 +279,16 @@
             </exclusions>
         </dependency>
 
+        <!-- Oracle DB -->
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>oracle-thin</artifactId>
         </dependency>
 
-        <!--test-->
+        <!-- Mockito for testing -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -301,10 +303,6 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>spring-maven-snapshot</id>
-            <url>http://repo.springsource.org/libs-snapshot</url>
         </repository>
     </repositories>
 
