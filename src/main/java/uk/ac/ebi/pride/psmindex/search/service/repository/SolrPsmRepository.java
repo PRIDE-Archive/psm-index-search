@@ -34,12 +34,15 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     Page<Psm> findByPeptideSequence(String peptideSequence, Pageable pageable);
     @Query("peptide_sequence:?0 AND project_accession:?1")
     List<Psm> findByPeptideSequenceAndProjectAccessions(String peptideSequence, String projectAccession);
+    Long countByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession);
     @Query("peptide_sequence:?0 AND assay_accession:?1")
     List<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession);
+    Long countByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession);
 
     // Project accession query methods
     @Query("project_accession:?0")
     List<Psm> findByProjectAccession(String projectAccession);
+    Long countByProjectAccession(String projectAccession);
     @Query("project_accession:(?0)")
     List<Psm> findByProjectAccessionIn(Collection<String> projectAccessions);
     @Query("project_accession:?0")
@@ -50,6 +53,7 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     // Assay accession query methods
     @Query("assay_accession:?0")
     List<Psm> findByAssayAccession(String assayAccession);
+    Long countByAssayAccession(String assayAccession);
     @Query("assay_accession:(?0)")
     List<Psm> findByAssayAccessionIn(Collection<String> assayAccessions);
     @Query("assay_accession:?0")

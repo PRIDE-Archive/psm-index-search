@@ -41,6 +41,12 @@ public class PsmSearchService {
     }
 
     // Sequence query methods
+
+    // ToDo: document risks of using methods not using pagination
+    //       There may be > 100.000 Psm objects for some queries
+    //       It is highly recommended to use the paged version
+    //       of a method if in doubt about the result.
+    //       Example: PSMs for single Protein P02768: > 130.000
     public List<Psm> findByPeptideSequence(String peptideSequence) {
         return solrPsmRepository.findByPeptideSequence(peptideSequence);
     }
@@ -49,6 +55,7 @@ public class PsmSearchService {
         return solrPsmRepository.findByPeptideSequence(peptideSequence, pageable);
     }
 
+    // ToDo: remove methods for sub sequence search and let client decide on wild card usage
     public List<Psm> findByPeptideSubSequence(String peptideSequence) {
         return solrPsmRepository.findByPeptideSequence("*"+peptideSequence+"*");
     }
@@ -60,6 +67,10 @@ public class PsmSearchService {
     public List<Psm> findByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
         return solrPsmRepository.findByPeptideSequenceAndProjectAccessions(peptideSequence,projectAccession);
     }
+    public Long countByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
+        return solrPsmRepository.countByPeptideSequenceAndProjectAccession(peptideSequence,projectAccession);
+    }
+
     public List<Psm> findByPeptideSubSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
         return solrPsmRepository.findByPeptideSequenceAndProjectAccessions("*"+peptideSequence+"*",projectAccession);
     }
@@ -67,6 +78,10 @@ public class PsmSearchService {
     public List<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
         return solrPsmRepository.findByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession);
     }
+    public Long countByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
+        return solrPsmRepository.countByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession);
+    }
+
     public List<Psm> findByPeptideSubSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
         return solrPsmRepository.findByPeptideSequenceAndAssayAccession("*"+peptideSequence+"*", assayAccession);
     }
@@ -74,6 +89,9 @@ public class PsmSearchService {
     // Project accession query methods
     public List<Psm> findByProjectAccession(String projectAccession) {
         return solrPsmRepository.findByProjectAccession(projectAccession);
+    }
+    public Long countByProjectAccession(String projectAccession) {
+        return solrPsmRepository.countByProjectAccession(projectAccession);
     }
 
     public List<Psm> findByProjectAccession(Collection<String> projectAccessions) {
@@ -91,6 +109,9 @@ public class PsmSearchService {
     // Assay accession query methods
     public List<Psm> findByAssayAccession(String assayAccession) {
         return solrPsmRepository.findByAssayAccession(assayAccession);
+    }
+    public Long countByAssayAccession(String assayAccession) {
+        return solrPsmRepository.countByAssayAccession(assayAccession);
     }
 
     public List<Psm> findByAssayAccession(Collection<String> assayAccessions) {
