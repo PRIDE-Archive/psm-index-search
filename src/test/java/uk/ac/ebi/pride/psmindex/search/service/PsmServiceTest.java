@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
+import org.springframework.data.solr.core.query.result.HighlightPage;
 import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.psmindex.search.model.Modification;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
@@ -28,6 +29,9 @@ import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFacto
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import static uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository.*;
 
 public class PsmServiceTest extends SolrTestCaseJ4 {
 
@@ -78,6 +82,9 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     private static final String MOD_1_NAME = "phosphorylated residue";
     private static final String MOD_2_NAME = "amidated residue";
 
+    private static final String MOD_1_SYNONYM = "phosphorylation";
+    private static final String MOD_2_SYNONYM = "amidation";
+
     //Sequences
     private static final String SEQUENCE_SUB = "IPFFEITVPE";
     private static final String SEQUENCE_LT_6 = "ITVPE";
@@ -99,7 +106,6 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
                 "src/test/resources/solr");
     }
 
-
     @Before
     @Override
     public void setUp() throws Exception {
@@ -115,7 +121,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     private void deleteAllData() {
-        PsmIndexService psmIndexService = new PsmIndexService(solrPsmRepositoryFactory.create());
+        PsmIndexService psmIndexService = new PsmIndexService(server, solrPsmRepositoryFactory.create());
         psmIndexService.deleteAll();
     }
 
@@ -143,7 +149,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchById() throws SolrServerException {
+    public void testSearchById(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findById(PSM_1_ID);
@@ -156,7 +162,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByIds() throws SolrServerException {
+    public void testSearchByIds(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findById(Arrays.asList(PSM_1_ID, PSM_2_ID, PSM_3_ID));
@@ -166,7 +172,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByIdWildcard() throws SolrServerException {
+    public void testSearchByIdWildcard(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findById(PSM_ID_PREFIX + "*");
@@ -178,7 +184,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
 
     @Test
-    public void testSearchByPeptideSequence() throws SolrServerException {
+    public void testSearchByPeptideSequence(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE);
@@ -193,7 +199,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPeptideSequenceWithPaging() throws SolrServerException {
+    public void testSearchByPeptideSequenceWithPaging(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         // first check that there are more than one result for the generic query
@@ -202,13 +208,13 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         assertEquals(2, psms.size());
 
         // then check that the page restriction to one result works
-        psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE, new PageRequest(1,1)).getContent();
+        psms = psmSearchService.findByPeptideSubSequence(PSM_3_SEQUENCE, new PageRequest(1, 1)).getContent();
         assertNotNull(psms);
         assertEquals(1, psms.size()); // expect only one result instead of two
     }
 
     @Test
-    public void testSearchByPeptideSequenceMiddleSubstring() throws SolrServerException {
+    public void testSearchByPeptideSequenceMiddleSubstring(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequence(SEQUENCE_SUB);
@@ -223,7 +229,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPepSequenceStandardCase() throws SolrServerException {
+    public void testSearchByPepSequenceStandardCase(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSequence(PSM_2_SEQUENCE);
@@ -237,7 +243,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPepSequenceBiggerThanOneHundred() throws SolrServerException {
+    public void testSearchByPepSequenceBiggerThanOneHundred(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSequence(SEQUENCE_BT_100);
@@ -248,7 +254,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPepSequenceLessThanSix() throws SolrServerException {
+    public void testSearchByPepSequenceLessThanSix(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSequence(SEQUENCE_LT_6);
@@ -259,7 +265,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPepSequenceWildcard() throws SolrServerException {
+    public void testSearchByPepSequenceWildcard(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSequence(PSM_3_SEQUENCE + "*");
@@ -274,7 +280,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPepSequenceStrict() throws SolrServerException {
+    public void testSearchByPepSequenceStrict(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSequence(PSM_3_SEQUENCE);
@@ -288,7 +294,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPeptideSequenceAndProjectAccessions() throws SolrServerException {
+    public void testSearchByPeptideSequenceAndProjectAccessions(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequenceAndProjectAccession(PSM_3_SEQUENCE, PROJECT_2_ACCESSION);
@@ -303,7 +309,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPeptideSequenceAndAssaysAccession() throws SolrServerException {
+    public void testSearchByPeptideSequenceAndAssaysAccession(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequenceAndAssayAccession(PSM_3_SEQUENCE, ASSAY_2_ACCESSION);
@@ -312,13 +318,13 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         assertEquals(2, psms.size());
 
         for (Psm psm : psms) {
-            assertTrue( PSM_3_ID.equals(psm.getId()) || PSM_2_ID.equals(psm.getId()) );
+            assertTrue(PSM_3_ID.equals(psm.getId()) || PSM_2_ID.equals(psm.getId()));
         }
 
     }
 
     @Test
-    public void testSearchByProjectAccession() throws SolrServerException {
+    public void testSearchByProjectAccession(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByProjectAccession(PROJECT_2_ACCESSION);
@@ -333,7 +339,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByProjectAccessions() throws SolrServerException {
+    public void testSearchByProjectAccessions(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByProjectAccession(Arrays.asList(PROJECT_1_ACCESSION, PROJECT_2_ACCESSION));
@@ -350,7 +356,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByAssaysAccession() throws SolrServerException {
+    public void testSearchByAssaysAccession(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByAssayAccession(ASSAY_2_ACCESSION);
@@ -365,7 +371,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByAssaysAccessions() throws SolrServerException {
+    public void testSearchByAssaysAccessions() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByAssayAccession(Arrays.asList(ASSAY_1_ACCESSION, ASSAY_2_ACCESSION));
@@ -382,7 +388,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchBySpectrumId() throws SolrServerException {
+    public void testSearchBySpectrumId() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findBySpectrumId(PSM_1_SPECTRUM);
@@ -397,7 +403,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchBySpectrumIds() throws SolrServerException {
+    public void testSearchBySpectrumIds() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findBySpectrumId(Arrays.asList(PSM_1_SPECTRUM, PSM_2_SPECTRUM, PSM_3_SPECTRUM));
@@ -414,7 +420,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByReportedId() throws SolrServerException {
+    public void testSearchByReportedId() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByReportedId(PSM_1_REPORTED_ID);
@@ -428,7 +434,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByReportedIdAndProjectAccessions() throws SolrServerException {
+    public void testSearchByReportedIdAndProjectAccessions() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByReportedIdAndProjectAccession(PSM_1_REPORTED_ID, PROJECT_1_ACCESSION);
@@ -441,7 +447,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByReportedIdAndAssaysAccession() throws SolrServerException {
+    public void testSearchByReportedIdAndAssaysAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByReportedIdAndAssayAccession(PSM_1_REPORTED_ID, ASSAY_1_ACCESSION);
@@ -455,7 +461,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByReportedIdAndIncorrectAssaysAccession() throws SolrServerException {
+    public void testSearchByReportedIdAndIncorrectAssaysAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         //There is not psm with these reported id and the assay accession
@@ -466,7 +472,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByProteinAccession() throws SolrServerException {
+    public void testSearchByProteinAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByProteinAccession(PROTEIN_1_ACCESSION);
@@ -480,7 +486,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByProteinAccessionAndProjectAccessions() throws SolrServerException {
+    public void testSearchByProteinAccessionAndProjectAccessions() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByProteinAccessionAndProjectAccession(PROTEIN_1_ACCESSION, PROJECT_1_ACCESSION);
@@ -493,7 +499,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByProteinAccessionAndAssaysAccession() throws SolrServerException {
+    public void testSearchByProteinAccessionAndAssaysAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByProteinAccessionAndAssayAccession(PROTEIN_1_ACCESSION, ASSAY_1_ACCESSION);
@@ -507,7 +513,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testPeptideSequencesProjectionByProjectAccession() throws SolrServerException {
+    public void testPeptideSequencesProjectionByProjectAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<String> peptideSequences = psmSearchService.findPeptideSequencesByProjectAccession(PROJECT_1_ACCESSION);
@@ -521,7 +527,62 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testFindPeptides() throws SolrServerException {
+    public void testFindByAssayAccessionFacetOnModificationNames() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        Map<String, Long> modificationsCount = psmSearchService.findByAssayAccessionFacetOnModificationNames(ASSAY_1_ACCESSION, null, null);
+
+        assertNotNull(modificationsCount);
+        assertEquals(2, modificationsCount.size());
+        assertEquals((Long) 1L, modificationsCount.get(MOD_1_NAME));
+        assertEquals((Long) 1L, modificationsCount.get(MOD_2_NAME));
+
+    }
+
+
+    @Test
+    public void testFindByAssayAccessionFacetOnModificationSynonyms() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        Map<String, Long> modificationsCount = psmSearchService.findByAssayAccessionFacetOnModificationSynonyms(ASSAY_1_ACCESSION, null, null);
+
+        assertNotNull(modificationsCount);
+        assertEquals(2, modificationsCount.size());
+        assertEquals((Long) 1L, modificationsCount.get(MOD_1_SYNONYM));
+        assertEquals((Long) 1L, modificationsCount.get(MOD_2_SYNONYM));
+    }
+
+    @Test
+    public void testFindByAssayAccessionHighlightsOnModificationNames() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        HighlightPage<Psm> highlightPage =
+                psmSearchService.findByAssayAccessionHighlightsOnModificationNames(ASSAY_2_ACCESSION, PSM_2_SEQUENCE, null, new PageRequest(0,10));
+
+        assertNotNull(highlightPage);
+        assertEquals(1, highlightPage.getHighlighted().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getField().getName());
+        assertEquals(1, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().size());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_2_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().get(0));
+    }
+
+
+    @Test
+    public void testFindByAssayAccessionHighlightsOnModificationSynonyms() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        HighlightPage<Psm> highlightPage = psmSearchService.findByAssayAccessionHighlightsOnModificationSynonyms(ASSAY_1_ACCESSION, PSM_1_SEQUENCE, null, new PageRequest(0, 10));
+
+        assertNotNull(highlightPage);
+        assertEquals(1, highlightPage.getHighlighted().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getField().getName());
+        assertEquals(1, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().size());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_1_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().get(0));
+
+    }
+
+    @Test
+    public void testFindPeptides() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         FacetPage<Psm> peptides = psmSearchService.findPeptidesByProteinAccessionAndAssayAccession(PROTEIN_2_ACCESSION, ASSAY_2_ACCESSION, new PageRequest(0, 10));
@@ -529,18 +590,18 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         List<FacetPivotFieldEntry> pivot = peptides.getPivot("peptide_sequence,modifications");
         assertNotNull(pivot);
-        assertEquals(2,pivot.toArray().length);
+        assertEquals(2, pivot.toArray().length);
 
         peptides = psmSearchService.findPeptidesByProteinAccessionAndProjectAccession(PROTEIN_2_ACCESSION, PROJECT_2_ACCESSION, new PageRequest(0, 10));
         pivot = peptides.getPivot("peptide_sequence,modifications");
         assertNotNull(pivot);
-        assertEquals(2,pivot.toArray().length);
+        assertEquals(2, pivot.toArray().length);
 
     }
 
     @Test
-    public void testDeletePsm() throws SolrServerException {
-        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+    public void testDeletePsm() {
+        PsmIndexService psmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findById(PSM_1_ID);
@@ -557,16 +618,16 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testDeletePsms() throws SolrServerException {
-        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+    public void testDeletePsms() {
+        PsmIndexService psmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
-        List<Psm> psms = psmSearchService.findById(Arrays.asList(PSM_1_ID,PSM_2_ID,PSM_3_ID));
+        List<Psm> psms = psmSearchService.findById(Arrays.asList(PSM_1_ID, PSM_2_ID, PSM_3_ID));
         assertNotNull(psms);
         assertEquals(3, psms.size());
 
         psmIndexService.delete(psms);
-        psms = psmSearchService.findById(Arrays.asList(PSM_1_ID,PSM_2_ID,PSM_3_ID));
+        psms = psmSearchService.findById(Arrays.asList(PSM_1_ID, PSM_2_ID, PSM_3_ID));
 
         assertNotNull(psms);
         assertEquals(0, psms.size());
@@ -588,6 +649,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         Modification mod1 = new Modification();
         mod1.addPosition(MOD_1_POS, null);
         mod1.setAccession(MOD_1_ACCESSION);
+        mod1.setName(MOD_1_NAME);
 
         Modification mod2 = new Modification();
         mod2.addPosition(MOD_2_POS, null);
@@ -596,11 +658,11 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
         modifications.add(mod1);
         modifications.add(mod2);
+        mod2.setName(MOD_2_NAME);
 
         psm.setModifications(modifications);
 
-
-        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmIndexService psmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
         psmIndexService.save(psm);
 
     }
@@ -619,10 +681,12 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         Modification mod1 = new Modification();
         mod1.addPosition(MOD_1_POS, null);
         mod1.setAccession(MOD_1_ACCESSION);
+        mod1.setName(MOD_1_NAME);
 
         Modification mod2 = new Modification();
         mod2.addPosition(MOD_2_POS, null);
         mod2.setAccession(MOD_2_ACCESSION);
+        mod2.setName(MOD_2_NAME);
 
         List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
         modifications.add(mod1);
@@ -630,7 +694,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         psm.setModifications(modifications);
 
-        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmIndexService psmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
         psmIndexService.save(psm);
     }
 
@@ -648,10 +712,12 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         Modification mod1 = new Modification();
         mod1.addPosition(MOD_1_POS, null);
         mod1.setAccession(MOD_1_ACCESSION);
+        mod1.setName(MOD_1_NAME);
 
         Modification mod2 = new Modification();
         mod2.addPosition(MOD_2_POS, null);
         mod2.setAccession(MOD_2_ACCESSION);
+        mod2.setName(MOD_2_NAME);
 
         List<ModificationProvider> modifications = new LinkedList<ModificationProvider>();
         modifications.add(mod1);
@@ -659,8 +725,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
         psm.setModifications(modifications);
 
-        PsmIndexService psmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmIndexService psmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
         psmIndexService.save(psm);
     }
-
 }

@@ -11,10 +11,16 @@ public class PsmFields {
     public static final String PEPTIDE_SEQUENCE = "peptide_sequence";
     public static final String SPECTRUM_ID = "spectrum_id";
     public static final String PROTEIN_ACCESSION = "protein_accession";
+    public static final String DATABASE = "database";
+    public static final String DATABASE_VERSION = "database_version";
     public static final String PROJECT_ACCESSION = "project_accession";
     public static final String ASSAY_ACCESSION = "assay_accession";
     public static final String MODIFICATIONS = "modifications";
-
+    public static final String MOD_NAMES = "mod_names";
+    public static final String MOD_NAMES_AS_TEXT = "mod_names_as_text";
+    public static final String MOD_ACCESSIONS = "mod_accessions";
+    public static final String MOD_ACCESSIONS_AS_TEXT = "mod_accessions_as_text";
+    public static final String MOD_SYNONYMS = "mod_synonyms";
     public static final String UNIQUE = "unique";
     public static final String SEARCH_ENGINE = "search_engine";
     public static final String SEARCH_ENGINE_SCORE = "search_engine_score";

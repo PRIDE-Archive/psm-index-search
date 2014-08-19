@@ -11,6 +11,7 @@
     <artifactId>psm-index-search</artifactId>
     <packaging>jar</packaging>
     <version>0.1.5-SNAPSHOT</version>
+    <name>psm-index-search</name>
 
     <!--
         To build the project use:
@@ -48,7 +49,7 @@
 
     <properties>
         <archive.repo.version>0.1.18</archive.repo.version>
-        <archive.data.provider.api.version>2.0.3</archive.data.provider.api.version>
+        <archive.data.provider.api.version>2.0.5-SNAPSHOT</archive.data.provider.api.version>
         <pride.accession.resolver.version>1.0.1</pride.accession.resolver.version>
         <archive.utils.version>0.1.10</archive.utils.version>
         <jmztab.version>3.0.0</jmztab.version>
@@ -238,6 +239,7 @@
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>jmztab-modular-model</artifactId>
             <version>${jmztab.version}</version>
+            <!-- based on mzTab specification version 1.0 RC5-->
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -249,6 +251,14 @@
             <groupId>uk.ac.ebi.pride</groupId>
             <artifactId>jmztab-modular-util</artifactId>
             <version>${jmztab.version}</version>
+            <!-- based on mzTab specification version 1.0 RC5-->
+        </dependency>
+
+        <!-- pride tools for ontology translation -->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>pride-mod</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- ##### 3rd party dependencies ##### ##### ##### ##### ##### -->

@@ -34,6 +34,12 @@ public class Psm implements PeptideSequenceProvider {
     @Field(PsmFields.PROTEIN_ACCESSION)
     private String proteinAccession;
 
+    @Field(PsmFields.DATABASE)
+    private String database;
+
+    @Field(PsmFields.DATABASE_VERSION)
+    private String databaseVersion;
+
     @Field(PsmFields.PROJECT_ACCESSION)
     private String projectAccession;
 
@@ -42,6 +48,12 @@ public class Psm implements PeptideSequenceProvider {
 
     @Field(PsmFields.MODIFICATIONS)
     private List<String> modificationsAsString;
+
+    @Field(PsmFields.MOD_NAMES)
+    private List<String> modificationNames;
+
+    @Field(PsmFields.MOD_ACCESSIONS)
+    private List<String> modificationAccessions;
 
     @Field(PsmFields.UNIQUE)
     private Boolean unique;
@@ -117,6 +129,22 @@ public class Psm implements PeptideSequenceProvider {
 
     public void setProteinAccession(String proteinAccession) {
         this.proteinAccession = proteinAccession;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getDatabaseVersion() {
+        return databaseVersion;
+    }
+
+    public void setDatabaseVersion(String databaseVersion) {
+        this.databaseVersion = databaseVersion;
     }
 
     public String getProjectAccession() {
@@ -236,12 +264,18 @@ public class Psm implements PeptideSequenceProvider {
             return;
 
         List<String> modificationsAsString = new ArrayList<String>();
+        List<String> modificationNames = new ArrayList<String>();
+        List<String> modificationAccessions = new ArrayList<String>();
 
         for (ModificationProvider modification : modifications) {
             modificationsAsString.add(ModificationHelper.convertToString(modification));
+            modificationAccessions.add(modification.getAccession());
+            modificationNames.add(modification.getName());
         }
 
         this.modificationsAsString = modificationsAsString;
+        this.modificationAccessions = modificationAccessions;
+        this.modificationNames = modificationNames;
     }
 
     public void addModification(ModificationProvider modification) {
@@ -250,7 +284,18 @@ public class Psm implements PeptideSequenceProvider {
             modificationsAsString = new ArrayList<String>();
         }
 
+        if (modificationAccessions == null) {
+            modificationAccessions = new ArrayList<String>();
+        }
+
+        if (modificationNames == null) {
+            modificationNames = new ArrayList<String>();
+        }
+
+
         modificationsAsString.add(ModificationHelper.convertToString(modification));
+        modificationAccessions.add(modification.getAccession());
+        modificationNames.add(modification.getName());
     }
 
     public Double getRetentionTime() {

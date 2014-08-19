@@ -1,22 +1,23 @@
 package uk.ac.ebi.pride.psmindex.search.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
+import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
+import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
- * @author Jose A. Dianes, Noemi del Toro
+ * @author Jose A. Dianes
+ * @author ntoro
  * @version $Id$
- *          <p/>
- *          NOTE: protein accessions can contain chars that produce problems in solr queries ([,],:). They are replaced by _ when
- *          using the repository methods
+ *
  */
 @Service
 public class PsmSearchService {
@@ -57,7 +58,7 @@ public class PsmSearchService {
 
     // ToDo: remove methods for sub sequence search and let client decide on wild card usage
     public List<Psm> findByPeptideSubSequence(String peptideSequence) {
-        return solrPsmRepository.findByPeptideSequence("*"+peptideSequence+"*");
+        return solrPsmRepository.findByPeptideSequence("*" + peptideSequence + "*");
     }
 
     public Page<Psm> findByPeptideSubSequence(String peptideSequence, Pageable pageable) {
@@ -161,6 +162,7 @@ public class PsmSearchService {
         return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession);
     }
 
+    //Projection for peptide sequence
     public List<String> findPeptideSequencesByProjectAccession(String projectAccession) {
 
         List<String> peptideSequences = new ArrayList<String>();
@@ -173,6 +175,119 @@ public class PsmSearchService {
         }
 
         return peptideSequences;
+    }
+
+    /**
+     * Count the facets per modification name
+     * @param assayAccession mandatory
+     * @param term optional
+     * @param modNameFilters optional
+     * @return a map with the mod_names and the number of hits per mod_synonym
+     */
+    public Map<String, Long> findByAssayAccessionFacetOnModificationNames(String assayAccession, String term, List<String> modNameFilters) {
+
+        Map<String, Long> modificationsCount = new HashMap<String, Long>();
+        FacetPage<Psm> psms;
+
+        if ((term == null || term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
+            psms = solrPsmRepository.findByAssayAccessionFacetModNames(assayAccession, new PageRequest(0, 1));
+        } else if (term != null && !term.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionFacetModNames(assayAccession, term, new PageRequest(0, 1));
+        } else if (modNameFilters != null && !modNameFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModNames(assayAccession, modNameFilters, new PageRequest(0, 1));
+        } else {
+            psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModNames(assayAccession, term, modNameFilters, new PageRequest(0, 1));
+        }
+
+        if (psms != null) {
+            for (FacetFieldEntry facetFieldEntry : psms.getFacetResultPage(PsmFields.MOD_NAMES)) {
+                modificationsCount.put(facetFieldEntry.getValue(), facetFieldEntry.getValueCount());
+            }
+        }
+        return modificationsCount;
+    }
+
+    /**
+     * Count the facets per modification synonyms
+     * @param assayAccession mandatory
+     * @param term optional
+     * @param modSynonymFilters optional
+     * @return a map with the mod_synonyms and the number of hits per mod_synonym
+     */
+    public Map<String, Long> findByAssayAccessionFacetOnModificationSynonyms(
+            String assayAccession, String term, List<String> modSynonymFilters) {
+
+        Map<String, Long> modificationsCount = new HashMap<String, Long>();
+        FacetPage<Psm> psms;
+
+        if ((term == null || term.isEmpty()) && (modSynonymFilters == null || modSynonymFilters.isEmpty())) {
+            psms = solrPsmRepository.findByAssayAccessionFacetModSynonyms(assayAccession, new PageRequest(0,1));
+        } else if (term != null && !term.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionFacetModSynonyms(assayAccession, term, new PageRequest(0,1));
+        } else if (modSynonymFilters != null && !modSynonymFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModSynonyms(assayAccession, modSynonymFilters, new PageRequest(0,1));
+        } else {
+            psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModSynonyms(assayAccession, term, modSynonymFilters, new PageRequest(0,1));
+        }
+
+        if (psms != null) {
+            for (FacetFieldEntry facetFieldEntry : psms.getFacetResultPage(PsmFields.MOD_SYNONYMS)) {
+                modificationsCount.put(facetFieldEntry.getValue(), facetFieldEntry.getValueCount());
+            }
+        }
+        return modificationsCount;
+    }
+
+    /**
+     * Return filtered psms (or not) by modifications names with the highlights for peptide_sequence and protein_sequence
+     * @param assayAccession mandatory
+     * @param term optional
+     * @param modNameFilters optional
+     * @param pageable requested page
+     * @return A page with the psms and the highlights snippets
+     */
+    public HighlightPage<Psm> findByAssayAccessionHighlightsOnModificationNames(
+            String assayAccession, String term, List<String> modNameFilters, Pageable pageable) {
+
+        HighlightPage<Psm> psms;
+
+        if ((term == null || term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsModNames(assayAccession, pageable);
+        } else if (term != null && !term.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsModNames(assayAccession, term, pageable);
+        } else if (modNameFilters != null && !modNameFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModNames(assayAccession, modNameFilters, pageable);
+        } else {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModNames(assayAccession, term, modNameFilters, pageable);
+        }
+
+        return psms;
+    }
+
+    /**
+     * Return filtered psms (or not) by modifications synonyms with the highlights for peptide_sequence and protein_sequence
+     * @param assayAccession mandatory
+     * @param term optional
+     * @param modSynonymFilters optional
+     * @param pageable requested page
+     * @return A page with the psms and the highlights snippets
+     */
+    public HighlightPage<Psm> findByAssayAccessionHighlightsOnModificationSynonyms(
+            String assayAccession, String term, List<String> modSynonymFilters, Pageable pageable) {
+
+        HighlightPage<Psm> psms;
+
+        if ((term == null || term.isEmpty()) && (modSynonymFilters == null || modSynonymFilters.isEmpty())) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsModSynonyms(assayAccession, pageable);
+        } else if (term != null && !term.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsModSynonyms(assayAccession, term, pageable);
+        } else if (modSynonymFilters != null && !modSynonymFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModSynonyms(assayAccession, modSynonymFilters, pageable);
+        } else {
+            psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModSynonyms(assayAccession, term, modSynonymFilters, pageable);
+        }
+
+        return psms;
     }
 
     //TODO: Change the return type

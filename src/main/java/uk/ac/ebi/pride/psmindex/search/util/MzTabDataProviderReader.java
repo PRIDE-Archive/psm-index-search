@@ -109,13 +109,16 @@ public class MzTabDataProviderReader {
                             + cleanPepSequence
             );
             newPsm.setReportedId(mzTabPsm.getPSM_ID());
-            //TODO: REMOVE the clean protein ac to be compatible with the project index
             newPsm.setSpectrumId(createSpectrumId(mzTabPsm, projectAccession));
             newPsm.setPeptideSequence(cleanPepSequence);
             newPsm.setProjectAccession(projectAccession);
             newPsm.setAssayAccession(assayAccession);
-            String correctedAccession = getCorrectedAccession(mzTabPsm.getAccession(), mzTabPsm.getDatabase());
-            newPsm.setProteinAccession(correctedAccession);
+            // To be compatible with the project index we don't clean the protein accession
+            // String correctedAccession = getCorrectedAccession(mzTabPsm.getAccession(), mzTabPsm.getDatabase());
+            // newPsm.setProteinAccession(correctedAccession);
+            newPsm.setProteinAccession(mzTabPsm.getAccession());
+            newPsm.setDatabase(mzTabPsm.getDatabase());
+            newPsm.setDatabaseVersion(mzTabPsm.getDatabaseVersion());
 
             newPsm.setModifications(new LinkedList<ModificationProvider>());
             //Modifications

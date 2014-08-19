@@ -14,6 +14,7 @@ import java.util.TreeMap;
 public class Modification implements ModificationProvider {
 
     private String accession;
+    private String name;
     private Integer mainPosition;
     private Map<Integer, CvParamProvider> positionMap = new TreeMap<Integer, CvParamProvider>();
     private CvParamProvider neutralLoss;
@@ -27,13 +28,24 @@ public class Modification implements ModificationProvider {
     public void setAccession(String accession) {
         this.accession = accession;
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Position used by the Archive web app. In the case of ambiguous position
      * it will be the first one reported
      */
     @Override
     public Integer getMainPosition() {
-        //In the case that we have ambiguous modification we choose the first to be expose
+        //TODO: Change the selection from the first one to the highest one
+        //In the case that we have ambiguous modification we choose the one with highest score to be expose
         if (this.getPositionMap() != null && !this.getPositionMap().isEmpty()) {
             this.mainPosition = this.getPositionMap().entrySet().iterator().next().getKey();
         }

@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.jmztab.model.CVParam;
 import uk.ac.ebi.pride.jmztab.model.MZTabUtils;
 import uk.ac.ebi.pride.jmztab.model.Section;
 import uk.ac.ebi.pride.psmindex.search.model.Modification;
+import uk.ac.ebi.pridemod.ModReader;
 
 import java.util.Map;
 
@@ -39,7 +40,13 @@ public class ModificationHelper {
 
         //TODO: Handle the neutral loss cases
         Modification modification = new Modification();
-        modification.setAccession(mzTabMod.getType().name() + SPLIT_CHAR + mzTabMod.getAccession());
+        ModReader modReader = ModReader.getInstance();
+
+        String accession = mzTabMod.getType().name() + SPLIT_CHAR + mzTabMod.getAccession();
+        String name = modReader.getPTMbyAccession(accession).getName();
+
+        modification.setAccession(accession);
+        modification.setName(name);
 
         if (mzTabMod.getPositionMap() != null && !mzTabMod.getPositionMap().isEmpty()) {
             for (Map.Entry<Integer, uk.ac.ebi.pride.jmztab.model.CVParam> integerCVParamEntry : mzTabMod.getPositionMap().entrySet()) {

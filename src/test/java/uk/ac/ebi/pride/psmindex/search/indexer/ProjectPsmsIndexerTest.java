@@ -46,13 +46,14 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
     private static MZTabFile mzTabFileP1A2;
     private static MZTabFile mzTabFileP2A1;
 
+    private SolrServer server;
     private SolrPsmRepositoryFactory solrPsmRepositoryFactory;
 
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        SolrServer server = new EmbeddedSolrServer(h.getCoreContainer(), h.getCore().getName());
+        server = new EmbeddedSolrServer(h.getCoreContainer(), h.getCore().getName());
         solrPsmRepositoryFactory = new SolrPsmRepositoryFactory(new SolrTemplate(server));
     }
 
@@ -76,7 +77,7 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
     @Test
     public void testIndexAllPsmsForProjectAndAssay() throws Exception {
         PsmSearchService PsmSearchService = new PsmSearchService(this.solrPsmRepositoryFactory.create());
-        PsmIndexService PsmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmIndexService PsmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
 
         ProjectPsmsIndexer projectPsmsIndexer = new ProjectPsmsIndexer(PsmSearchService, PsmIndexService);
 
@@ -103,7 +104,7 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
     public void testDeleteAllPsmsForProject() throws Exception {
 
         PsmSearchService PsmSearchService = new PsmSearchService(this.solrPsmRepositoryFactory.create());
-        PsmIndexService PsmIndexService = new PsmIndexService(this.solrPsmRepositoryFactory.create());
+        PsmIndexService PsmIndexService = new PsmIndexService(server, this.solrPsmRepositoryFactory.create());
 
         ProjectPsmsIndexer projectPsmsIndexer = new ProjectPsmsIndexer(PsmSearchService, PsmIndexService);
 

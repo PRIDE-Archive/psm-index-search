@@ -25,6 +25,7 @@ import static uk.ac.ebi.pride.psmindex.search.util.MzTabDataProviderReader.readP
  */
 public class MzTabDataProviderReaderTest {
 
+
     private static Logger logger = LoggerFactory.getLogger(MzTabDataProviderReaderTest.class);
     private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
 
@@ -34,6 +35,9 @@ public class MzTabDataProviderReaderTest {
     private static final String PROJECT_1_ASSAY_1 = "32411";
     private static final String PROJECT_1_ASSAY_2 = "32416";
     private static final String PROJECT_2_ASSAY_1 = "00001";
+
+    private static final String MOD_ACCESSION = "MOD:01214";
+    private static final String MOD_NAME = "iodoacetamide - site C";
 
     private static final String FILE_PRE = ";PRIDE_Exp_Complete_Ac_";
     private static final String FILE_POST = ".xml;spectrum=";
@@ -108,19 +112,23 @@ public class MzTabDataProviderReaderTest {
         Iterator<ModificationProvider> iterator = modifications.iterator();
 
         ModificationProvider mod = iterator.next();
-        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals(MOD_ACCESSION, mod.getAccession());
+        assertEquals(MOD_NAME, mod.getName());
         assertEquals((Integer) 8, mod.getMainPosition());
 
         mod = iterator.next();
-        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals(MOD_ACCESSION, mod.getAccession());
+        assertEquals(MOD_NAME, mod.getName());
         assertEquals((Integer) 15, mod.getMainPosition());
 
         mod = iterator.next();
-        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals(MOD_ACCESSION, mod.getAccession());
+        assertEquals(MOD_NAME, mod.getName());
         assertEquals((Integer) 17, mod.getMainPosition());
 
         mod = iterator.next();
-        assertEquals("MOD:01214", mod.getAccession());
+        assertEquals(MOD_ACCESSION, mod.getAccession());
+        assertEquals(MOD_NAME, mod.getName());
         assertEquals((Integer) 29, mod.getMainPosition());
     }
 
