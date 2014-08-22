@@ -4,8 +4,8 @@ import org.apache.solr.client.solrj.beans.Field;
 import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.archive.dataprovider.identification.PeptideSequenceProvider;
 import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
-import uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper;
-import uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper;
+import uk.ac.ebi.pride.indexutils.helpers.CvParamHelper;
+import uk.ac.ebi.pride.indexutils.helpers.ModificationHelper;
 
 import java.util.ArrayList;
 import java.util.List;

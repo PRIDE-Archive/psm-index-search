@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static uk.ac.ebi.pride.psmindex.search.util.helper.CvParamHelper.convertToCvParamProvider;
-import static uk.ac.ebi.pride.psmindex.search.util.helper.ModificationHelper.convertToModificationProvider;
+import static uk.ac.ebi.pride.indexutils.helpers.ModificationHelper.convertToModificationProvider;
+import static uk.ac.ebi.pride.indexutils.helpers.CvParamHelper.convertToCvParamProvider;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
