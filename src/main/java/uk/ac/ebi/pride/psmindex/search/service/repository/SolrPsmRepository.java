@@ -13,6 +13,8 @@ import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import java.util.Collection;
 import java.util.List;
 
+import static org.springframework.data.solr.core.query.Query.Operator.*;
+
 /**
  * @author Jose A. Dianes, Noemi del Toro
  * @version $Id$
@@ -64,17 +66,26 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     @Query("assay_accession:(?0)")
     Page<Psm> findByAssayAccessionIn(Collection<String> assayAccessions, Pageable pageable);
 
+    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
+    @Query(value = "assay_accession:?0")
+    HighlightPage<Psm>findByAssayAccessionHighlights(String assayAccession, Pageable pageable);
+
+    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)")
+    HighlightPage<Psm>findByAssayAccessionHighlights(String assayAccession, String term, Pageable pageable);
+
+
     //TODO Replace these methods with dynamic queries
     @Facet(fields = {"mod_names"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)", filters = "mod_names:(?2)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_names:(?2)", defaultOperator = AND)
     FacetPage<Psm> findByAssayAccessionFacetAndFilterModNames(String assayAccession, String term, List<String> modNames, Pageable pageable);
 
     @Facet(fields = {"mod_names"})
-    @Query(value = "assay_accession:?0" , filters = "mod_names:(?1)")
+    @Query(value = "assay_accession:?0" , filters = "mod_names:(?1)", defaultOperator = AND)
     FacetPage<Psm>findByAssayAccessionFacetAndFilterModNames(String assayAccession, List<String> modNames, Pageable pageable);
 
     @Facet(fields = {"mod_names"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)")
     FacetPage<Psm> findByAssayAccessionFacetModNames(String assayAccession, String term, Pageable pageable);
 
     @Facet(fields = {"mod_names"})
@@ -83,15 +94,15 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
 
     //TODO Replace these methods with dynamic queries
     @Facet(fields = {"mod_synonyms"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)", filters = "mod_synonyms:(?2)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_synonyms:(?2)", defaultOperator = AND)
     FacetPage<Psm>findByAssayAccessionFacetAndFilterModSynonyms(String assayAccession, String term, List<String> modSynonyms, Pageable pageable);
 
     @Facet(fields = {"mod_synonyms"})
-    @Query(value = "assay_accession:?0" , filters = "mod_synonyms:(?1)")
+    @Query(value = "assay_accession:?0" , filters = "mod_synonyms:(?1)", defaultOperator = AND)
     FacetPage<Psm>findByAssayAccessionFacetAndFilterModSynonyms(String assayAccession, List<String> modSynonyms, Pageable pageable);
 
     @Facet(fields = {"mod_synonyms"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)")
     FacetPage<Psm> findByAssayAccessionFacetModSynonyms(String assayAccession, String term, Pageable pageable);
 
     @Facet(fields = {"mod_synonyms"})
@@ -99,39 +110,23 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     FacetPage<Psm> findByAssayAccessionFacetModSynonyms(String assayAccession, Pageable pageable);
 
     //TODO Replace these methods with dynamic queries
-    //Highlight only make sense if we try to search by peptide_sequence or portein_accession as an extra term
+    //Highlight only make sense if we try to search by peptide_sequence or protein_accession as an extra term
     @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)", filters = "mod_names:(?2)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_names:(?2)", defaultOperator = AND)
     HighlightPage<Psm> findByAssayAccessionHighlightsAndFilterModNames(String assayAccession, String term, List<String> modNames, Pageable pageable);
 
-    @Query(value = "assay_accession:?0", filters = "mod_names:(?1)")
+    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
+    @Query(value = "assay_accession:?0", filters = "mod_names:(?1)", defaultOperator = AND)
     HighlightPage<Psm> findByAssayAccessionHighlightsAndFilterModNames(String assayAccession, List<String> modNames, Pageable pageable);
-
-    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)")
-    HighlightPage<Psm> findByAssayAccessionHighlightsModNames(String assayAccession, String term, Pageable pageable);
-
-    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0")
-    HighlightPage<Psm> findByAssayAccessionHighlightsModNames(String assayAccession, Pageable pageable);
-
 
     //TODO Replace these methods with dynamic queries
     @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)", filters = "mod_synonyms:(?2)")
+    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_synonyms:(?2)", defaultOperator = AND)
     HighlightPage<Psm>findByAssayAccessionHighlightsAndFilterModSynonyms(String assayAccession, String term, List<String> modSynonyms, Pageable pageable);
 
     @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0", filters = "mod_synonyms:(?2)")
+    @Query(value = "assay_accession:?0", filters = "mod_synonyms:(?1)", defaultOperator = AND)
     HighlightPage<Psm>findByAssayAccessionHighlightsAndFilterModSynonyms(String assayAccession, List<String> modSynonyms, Pageable pageable);
-
-    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 protein_accession:?1)")
-    HighlightPage<Psm>findByAssayAccessionHighlightsModSynonyms(String assayAccession, String term, Pageable pageable);
-
-    @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-    @Query(value = "assay_accession:?0")
-    HighlightPage<Psm>findByAssayAccessionHighlightsModSynonyms(String assayAccession, Pageable pageable);
 
 
     // Spectrum id query methods

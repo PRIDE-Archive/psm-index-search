@@ -21,7 +21,7 @@ import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
-import uk.ac.ebi.pride.psmindex.search.model.Modification;
+import uk.ac.ebi.pride.indexutils.modifications.Modification;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
@@ -31,7 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository.*;
+import static uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository.HIGHLIGHT_POST_FRAGMENT;
+import static uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository.HIGHLIGHT_PRE_FRAGMENT;
 
 public class PsmServiceTest extends SolrTestCaseJ4 {
 
@@ -84,6 +85,15 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
 
     private static final String MOD_1_SYNONYM = "phosphorylation";
     private static final String MOD_2_SYNONYM = "amidation";
+
+    //Neutral Loss without mod
+    private static final String NEUTRAL_LOSS_ACC = "MS:1001524";
+    private static final String NEUTRAL_LOSS_NAME = "fragment neutral loss";
+    private static final String NEUTRAL_LOSS_VAL = "63.998283";
+    private static final String NEUTRAL_LOSS_POS = "7";
+
+    //Neutral Loss with mod
+    private static final String NEUTRAL_LOSS_MOD_POS = "3";
 
     //Sequences
     private static final String SEQUENCE_SUB = "IPFFEITVPE";

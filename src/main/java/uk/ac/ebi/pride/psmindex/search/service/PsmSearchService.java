@@ -186,14 +186,14 @@ public class PsmSearchService {
      */
     public Map<String, Long> findByAssayAccessionFacetOnModificationNames(String assayAccession, String term, List<String> modNameFilters) {
 
-        Map<String, Long> modificationsCount = new HashMap<String, Long>();
+        Map<String, Long> modificationsCount = new TreeMap<String, Long>();
         FacetPage<Psm> psms;
 
         if ((term == null || term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionFacetModNames(assayAccession, new PageRequest(0, 1));
-        } else if (term != null && !term.isEmpty()) {
+        } else if ((term != null && !term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionFacetModNames(assayAccession, term, new PageRequest(0, 1));
-        } else if (modNameFilters != null && !modNameFilters.isEmpty()) {
+        } else if ((term == null || term.isEmpty()) && (modNameFilters != null && !modNameFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModNames(assayAccession, modNameFilters, new PageRequest(0, 1));
         } else {
             psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModNames(assayAccession, term, modNameFilters, new PageRequest(0, 1));
@@ -217,14 +217,14 @@ public class PsmSearchService {
     public Map<String, Long> findByAssayAccessionFacetOnModificationSynonyms(
             String assayAccession, String term, List<String> modSynonymFilters) {
 
-        Map<String, Long> modificationsCount = new HashMap<String, Long>();
+        Map<String, Long> modificationsCount = new TreeMap<String, Long>();
         FacetPage<Psm> psms;
 
         if ((term == null || term.isEmpty()) && (modSynonymFilters == null || modSynonymFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionFacetModSynonyms(assayAccession, new PageRequest(0,1));
-        } else if (term != null && !term.isEmpty()) {
+        } else if ((term != null && !term.isEmpty()) && modSynonymFilters == null || modSynonymFilters.isEmpty()) {
             psms = solrPsmRepository.findByAssayAccessionFacetModSynonyms(assayAccession, term, new PageRequest(0,1));
-        } else if (modSynonymFilters != null && !modSynonymFilters.isEmpty()) {
+        } else if ((term == null || term.isEmpty()) && (modSynonymFilters != null && !modSynonymFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModSynonyms(assayAccession, modSynonymFilters, new PageRequest(0,1));
         } else {
             psms = solrPsmRepository.findByAssayAccessionFacetAndFilterModSynonyms(assayAccession, term, modSynonymFilters, new PageRequest(0,1));
@@ -252,10 +252,10 @@ public class PsmSearchService {
         HighlightPage<Psm> psms;
 
         if ((term == null || term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
-            psms = solrPsmRepository.findByAssayAccessionHighlightsModNames(assayAccession, pageable);
-        } else if (term != null && !term.isEmpty()) {
-            psms = solrPsmRepository.findByAssayAccessionHighlightsModNames(assayAccession, term, pageable);
-        } else if (modNameFilters != null && !modNameFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlights(assayAccession, pageable);
+        } else if ((term != null && !term.isEmpty()) && (modNameFilters == null || modNameFilters.isEmpty())) {
+            psms = solrPsmRepository.findByAssayAccessionHighlights(assayAccession, term, pageable);
+        } else if ((term == null || term.isEmpty()) && (modNameFilters != null && !modNameFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModNames(assayAccession, modNameFilters, pageable);
         } else {
             psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModNames(assayAccession, term, modNameFilters, pageable);
@@ -278,10 +278,10 @@ public class PsmSearchService {
         HighlightPage<Psm> psms;
 
         if ((term == null || term.isEmpty()) && (modSynonymFilters == null || modSynonymFilters.isEmpty())) {
-            psms = solrPsmRepository.findByAssayAccessionHighlightsModSynonyms(assayAccession, pageable);
-        } else if (term != null && !term.isEmpty()) {
-            psms = solrPsmRepository.findByAssayAccessionHighlightsModSynonyms(assayAccession, term, pageable);
-        } else if (modSynonymFilters != null && !modSynonymFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlights(assayAccession, pageable);
+        } else if ((term != null && !term.isEmpty()) && modSynonymFilters == null || modSynonymFilters.isEmpty()) {
+            psms = solrPsmRepository.findByAssayAccessionHighlights(assayAccession, term, pageable);
+        } else if ((term == null || term.isEmpty()) && (modSynonymFilters != null && !modSynonymFilters.isEmpty())) {
             psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModSynonyms(assayAccession, modSynonymFilters, pageable);
         } else {
             psms = solrPsmRepository.findByAssayAccessionHighlightsAndFilterModSynonyms(assayAccession, term, modSynonymFilters, pageable);

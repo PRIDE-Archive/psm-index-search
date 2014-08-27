@@ -51,10 +51,9 @@
         <archive.repo.version>0.1.18</archive.repo.version>
         <archive.data.provider.api.version>2.0.5-SNAPSHOT</archive.data.provider.api.version>
         <pride.accession.resolver.version>1.0.1</pride.accession.resolver.version>
-        <archive.utils.version>0.1.10</archive.utils.version>
-        <pride.mod.version>2.0.0-SNAPSHOT</pride.mod.version>
         <pride.index.utils.version>0.1.0-SNAPSHOT</pride.index.utils.version>
-        <jmztab.version>3.0.0</jmztab.version>
+        <archive.utils.version>0.1.10</archive.utils.version>
+        <jmztab.version>3.0.1-SNAPSHOT</jmztab.version>
     </properties>
 
     <build>
@@ -121,7 +120,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
 
@@ -243,13 +241,6 @@
             <version>${pride.index.utils.version}</version>
         </dependency>
 
-        <!-- pride tools for ontology translation -->
-        <dependency>
-            <groupId>uk.ac.ebi.pride.tools</groupId>
-            <artifactId>pride-mod</artifactId>
-            <version>${pride.mod.version}</version>
-        </dependency>
-
         <!-- jmzTab -->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
@@ -262,12 +253,6 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>jmztab-modular-util</artifactId>
-            <version>${jmztab.version}</version>
-            <!-- based on mzTab specification version 1.0 RC5-->
         </dependency>
 
         <!-- ##### 3rd party dependencies ##### ##### ##### ##### ##### -->
