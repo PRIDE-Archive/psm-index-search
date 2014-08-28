@@ -19,9 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
-import org.springframework.data.solr.core.query.result.HighlightPage;
 import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.indexutils.modifications.Modification;
+import uk.ac.ebi.pride.indexutils.results.PageWrapper;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepositoryFactory;
@@ -566,14 +566,13 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     public void testFindByAssayAccessionHighlightsOnModificationNames() {
 
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
-        HighlightPage<Psm> highlightPage =
+        PageWrapper<Psm> highlightPage =
                 psmSearchService.findByAssayAccessionHighlightsOnModificationNames(ASSAY_2_ACCESSION, PSM_2_SEQUENCE, null, new PageRequest(0,10));
 
         assertNotNull(highlightPage);
-        assertEquals(1, highlightPage.getHighlighted().size());
-        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getField().getName());
-        assertEquals(1, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().size());
-        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_2_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().get(0));
+        assertEquals(1, highlightPage.getHighlights().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getKey());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_2_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getValue().get(0));
     }
 
 
@@ -581,13 +580,12 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     public void testFindByAssayAccessionHighlightsOnModificationSynonyms() {
 
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
-        HighlightPage<Psm> highlightPage = psmSearchService.findByAssayAccessionHighlightsOnModificationSynonyms(ASSAY_1_ACCESSION, PSM_1_SEQUENCE, null, new PageRequest(0, 10));
+        PageWrapper<Psm> highlightPage = psmSearchService.findByAssayAccessionHighlightsOnModificationSynonyms(ASSAY_1_ACCESSION, PSM_1_SEQUENCE, null, new PageRequest(0, 10));
 
         assertNotNull(highlightPage);
-        assertEquals(1, highlightPage.getHighlighted().size());
-        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getField().getName());
-        assertEquals(1, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().size());
-        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_1_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights(highlightPage.iterator().next()).iterator().next().getSnipplets().get(0));
+        assertEquals(1, highlightPage.getHighlights().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getKey());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_1_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getValue().get(0));
 
     }
 
