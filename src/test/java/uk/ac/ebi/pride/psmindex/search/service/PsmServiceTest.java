@@ -590,6 +590,33 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
+    public void testFindByProjectAccessionHighlightsOnModificationNames() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        PageWrapper<Psm> highlightPage =
+                psmSearchService.findByProjectAccessionHighlightsOnModificationNames(PROJECT_2_ACCESSION, PSM_2_SEQUENCE, null, new PageRequest(0,10));
+
+        assertNotNull(highlightPage);
+        assertEquals(1, highlightPage.getHighlights().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getKey());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_2_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getValue().get(0));
+    }
+
+
+    @Test
+    public void testFindByProjectAccessionHighlightsOnModificationSynonyms() {
+
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+        PageWrapper<Psm> highlightPage = psmSearchService.findByProjectAccessionHighlightsOnModificationSynonyms(PROJECT_1_ACCESSION, PSM_1_SEQUENCE, null, new PageRequest(0, 10));
+
+        assertNotNull(highlightPage);
+        assertEquals(1, highlightPage.getHighlights().size());
+        assertEquals(PsmFields.PEPTIDE_SEQUENCE, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getKey());
+        assertEquals(HIGHLIGHT_PRE_FRAGMENT + PSM_1_SEQUENCE + HIGHLIGHT_POST_FRAGMENT, highlightPage.getHighlights().entrySet().iterator().next().getValue().entrySet().iterator().next().getValue().get(0));
+
+    }
+
+    @Test
     public void testFindPeptides() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
