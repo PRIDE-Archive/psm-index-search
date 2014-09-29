@@ -11,22 +11,19 @@ import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.*;
-import static uk.ac.ebi.pride.psmindex.search.util.MzTabDataProviderReader.readPsmsFromMzTabFile;
+import static uk.ac.ebi.pride.psmindex.search.util.PsmMzTabBuilder.readPsmsFromMzTabFile;
 
 /**
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class MzTabDataProviderReaderTest {
+public class PsmMzTabBuilderTest {
 
 
-    private static Logger logger = LoggerFactory.getLogger(MzTabDataProviderReaderTest.class);
+    private static Logger logger = LoggerFactory.getLogger(PsmMzTabBuilderTest.class);
     private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
 
     private static final String PROJECT_1_ACCESSION = "PXD000581";
@@ -65,14 +62,14 @@ public class MzTabDataProviderReaderTest {
 
     @Test
     public void testReadPsmsFromMzTabFilesDirectory() throws Exception {
-        Map<String, LinkedList<Psm>> psms = new HashMap<String, LinkedList<Psm>>();
+        Map<String, List<Psm>> psms = new HashMap<String, List<Psm>>();
 
         psms.put(PROJECT_1_ASSAY_1, readPsmsFromMzTabFile(PROJECT_1_ACCESSION, PROJECT_1_ASSAY_1, mzTabFileP1A1));
         psms.put(PROJECT_1_ASSAY_2, readPsmsFromMzTabFile(PROJECT_1_ACCESSION, PROJECT_1_ASSAY_2, mzTabFileP1A2));
 
         assertTrue(psms.size() == NUM_ASSAYS);
 
-        for (Map.Entry<String, LinkedList<Psm>> stringLinkedListEntry : psms.entrySet()) {
+        for (Map.Entry<String, List<Psm>> stringLinkedListEntry : psms.entrySet()) {
             for (Psm psm : stringLinkedListEntry.getValue()) {
                 assertTrue(psm.getSpectrumId().startsWith(PROJECT_1_ACCESSION + FILE_PRE + stringLinkedListEntry.getKey() + FILE_POST));
             }
@@ -81,12 +78,12 @@ public class MzTabDataProviderReaderTest {
 
     @Test
     public void testReadPsmFromMzTabFileAndCompare() throws Exception {
-        Map<String, LinkedList<Psm>> psms = new HashMap<String, LinkedList<Psm>>();
+        Map<String, List<Psm>> psms = new HashMap<String, List<Psm>>();
         psms.put(PROJECT_2_ASSAY_1, readPsmsFromMzTabFile(PROJECT_2_ACCESSION, PROJECT_2_ASSAY_1, mzTabFileP2A1));
 
         assertTrue(psms.size() == 1);
 
-        Psm firstPsm = psms.entrySet().iterator().next().getValue().getFirst();
+        Psm firstPsm = psms.entrySet().iterator().next().getValue().get(0);
 
         assertEquals("TST000121_00001_175_orf19/5636_QSTSSTPCPYWDTGCLCVMPQFAGAVGNCVAK", firstPsm.getId());
         assertEquals("175", firstPsm.getReportedId());

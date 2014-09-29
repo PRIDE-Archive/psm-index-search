@@ -8,69 +8,26 @@ import uk.ac.ebi.pride.archive.dataprovider.param.CvParamProvider;
 import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIDGenerator;
 import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.jmztab.model.*;
-import uk.ac.ebi.pride.jmztab.utils.MZTabFileParser;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 
-import static uk.ac.ebi.pride.indexutils.helpers.ModificationHelper.convertToModificationProvider;
 import static uk.ac.ebi.pride.indexutils.helpers.CvParamHelper.convertToCvParamProvider;
+import static uk.ac.ebi.pride.indexutils.helpers.ModificationHelper.convertToModificationProvider;
+import static uk.ac.ebi.pride.psmindex.search.util.PsmIdBuilder.*;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
  * @version $Id$
  */
-public class MzTabDataProviderReader {
+public class PsmMzTabBuilder {
 
-    private static Logger logger = LoggerFactory.getLogger(MzTabDataProviderReader.class.getName());
-
-    private static ErrorLogOutputStream errorLogOutputStream = new ErrorLogOutputStream(logger);
-
-    /**
-     * mzTab files in the directory will have names such as PRIDE_Exp_Complete_Ac_28654.submissions. We are interested in the
-     * assay accession, the last bit if we split by '_'.
-     *
-     * @return A map of assay accessions to PSMs
-     * @throws java.io.IOException
-     */
-    @Deprecated
-    public static Map<String, LinkedList<Psm>> readPsmsFromMzTabFilesDirectory(String projectAccession, File mzTabFilesDirectory) throws IOException, MZTabException {
-
-        Map<String, LinkedList<Psm>> res = new HashMap<String, LinkedList<Psm>>();
-
-        File[] mzTabFilesInDirectory = mzTabFilesDirectory.listFiles(new MzTabFileNameFilter());
-        if (mzTabFilesInDirectory != null) {
-            for (File tabFile : mzTabFilesInDirectory) {
-
-                MZTabFileParser mzTabFileParser = new MZTabFileParser(tabFile, errorLogOutputStream);
-                MZTabFile mzTabFile = mzTabFileParser.getMZTabFile();
-
-                if (mzTabFile != null) {
-                    // get assay accession
-                    String assayAccession = tabFile.getName().split("[_\\.]")[4];
-
-                    // get all psms from the file
-                    LinkedList<Psm> assayPsms = convertFromMzTabPsmsToPrideArchivePsms(mzTabFile.getPSMs(), mzTabFile.getMetadata(), projectAccession, assayAccession);
-
-                    // add assay psms to the result
-                    res.put(assayAccession, assayPsms);
-                    logger.debug("Found " + assayPsms.size() + " psms for Assay " + assayAccession + " in file " + tabFile.getAbsolutePath());
-                } else {
-                    mzTabFileParser.getErrorList().print(errorLogOutputStream);
-                }
-
-            }
-        }
-
-        return res;
-    }
+    private static Logger logger = LoggerFactory.getLogger(PsmMzTabBuilder.class.getName());
 
     /**
      * The map between the assay accession and the file need to be provided externally from the database
@@ -78,9 +35,9 @@ public class MzTabDataProviderReader {
      * @return A map of assay accessions to PSMs
      * @throws java.io.IOException
      */
-    public static LinkedList<Psm> readPsmsFromMzTabFile(String projectAccession, String assayAccession, MZTabFile mzTabFile) throws IOException, MZTabException {
+    public static List<Psm> readPsmsFromMzTabFile(String projectAccession, String assayAccession, MZTabFile mzTabFile) throws IOException, MZTabException {
 
-        LinkedList<Psm> res = new LinkedList<Psm>();
+        List<Psm> res = new LinkedList<Psm>();
 
         if (mzTabFile != null) {
 
@@ -98,16 +55,10 @@ public class MzTabDataProviderReader {
         LinkedList<Psm> res = new LinkedList<Psm>();
 
         for (PSM mzTabPsm : mzTabPsms) {
-            String cleanPepSequence = PsmIdCleaner.cleanPeptideSequence(mzTabPsm.getSequence());
+            String cleanPepSequence = PsmSequenceCleaner.cleanPeptideSequence(mzTabPsm.getSequence());
 
             Psm newPsm = new Psm();
-            newPsm.setId(
-                    projectAccession + "_"
-                            + assayAccession + "_"
-                            + mzTabPsm.getPSM_ID() + "_"
-                            + mzTabPsm.getAccession() + "_"
-                            + cleanPepSequence
-            );
+            newPsm.setId(getId(projectAccession, assayAccession, mzTabPsm.getPSM_ID(), mzTabPsm.getAccession(), cleanPepSequence));
             newPsm.setReportedId(mzTabPsm.getPSM_ID());
             newPsm.setSpectrumId(createSpectrumId(mzTabPsm, projectAccession));
             newPsm.setPeptideSequence(cleanPepSequence);
@@ -254,6 +205,4 @@ public class MzTabDataProviderReader {
         logger.debug("Original accession " + accession + " fixed to " + fixedAccession);
         return (fixedAccession == null) ? accession : fixedAccession;
     }
-
-
 }

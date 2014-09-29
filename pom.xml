@@ -49,7 +49,7 @@
 
     <properties>
         <archive.repo.version>0.1.18</archive.repo.version>
-        <archive.data.provider.api.version>2.0.5-SNAPSHOT</archive.data.provider.api.version>
+        <archive.data.provider.api.version>2.0.6-SNAPSHOT</archive.data.provider.api.version>
         <pride.accession.resolver.version>1.0.1</pride.accession.resolver.version>
         <pride.index.utils.version>0.1.0-SNAPSHOT</pride.index.utils.version>
         <archive.utils.version>0.1.10</archive.utils.version>
@@ -149,14 +149,6 @@
                         <exclude>**/test</exclude>
                         <exclude>**/test/*.class</exclude>
                     </excludes>
-                    <archive>
-                        <manifest>
-                            <mainClass>uk.ac.ebi.pride.psmindex.search.tools.PsmIndexBuilder</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib</classpathPrefix>
-                            <useUniqueVersions>false</useUniqueVersions>
-                        </manifest>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>
@@ -241,19 +233,8 @@
             <version>${pride.index.utils.version}</version>
         </dependency>
 
-        <!-- jmzTab -->
-        <dependency>
-            <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>jmztab-modular-model</artifactId>
-            <version>${jmztab.version}</version>
-            <!-- based on mzTab specification version 1.0 RC5-->
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!-- jmzTab dependency is retrieved from the index-utils. In this way,
+            psm-index and protein-identification-index are using the same -->
 
         <!-- ##### 3rd party dependencies ##### ##### ##### ##### ##### -->
         <!-- spring-data solr-->

@@ -6,10 +6,10 @@ import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
 import uk.ac.ebi.pride.psmindex.search.service.PsmSearchService;
-import uk.ac.ebi.pride.psmindex.search.util.MzTabDataProviderReader;
+import uk.ac.ebi.pride.psmindex.search.util.PsmMzTabBuilder;
 
-import java.io.File;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -27,87 +27,8 @@ public class ProjectPsmsIndexer {
         this.psmIndexService = psmIndexService;
     }
 
-    @Deprecated
-    public void indexAllPsms(String projectAccession, String pathToMzTabFiles) {
-
-        Map<String, LinkedList<Psm>> psms = new HashMap<String, LinkedList<Psm>>();
-
-        long startTime;
-        long endTime;
-
-        startTime = System.currentTimeMillis();
-
-        // build PSMs from mzTabFiles
-        try {
-            if (pathToMzTabFiles != null) {
-                File generatedDirectory = new File(pathToMzTabFiles);
-                psms = MzTabDataProviderReader.readPsmsFromMzTabFilesDirectory(projectAccession, generatedDirectory);
-            }
-        } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
-            logger.error("Cannot get psms from project " + projectAccession + " in folder" + pathToMzTabFiles);
-            logger.error("Reason: ");
-            e.printStackTrace();
-        }
-
-        endTime = System.currentTimeMillis();
-        logger.info("Found " + getTotalPsmsCount(psms) + " psms "
-                + " in directory " + pathToMzTabFiles
-                + " for project " + projectAccession
-                + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
-
-        // add all PSMs to index if we have found some of them
-        if (getTotalPsmsCount(psms) != 0) {
-            startTime = System.currentTimeMillis();
-
-            for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> assayPsms : psms.entrySet()) {
-                Map<String, Psm> psmsToIndex = new HashMap<String, Psm>();
-
-                for (Psm psm : assayPsms.getValue()) {
-                    try {
-                        // add to save
-                        psmsToIndex.put(psm.getId(), psm);
-
-                        logger.debug(
-                                "ADDED PSM " + psm.getId() +
-                                        " from PROJECT:" + projectAccession +
-                                        " ASSAY:" + assayPsms.getKey()
-                        );
-                    } catch (Exception e) {
-                        logger.error("PSM " + psm.getId() + " caused an error");
-                        logger.error("ASSAY " + assayPsms.getKey());
-                        logger.error("PROJECT " + projectAccession);
-                        e.printStackTrace();
-                    }
-
-                }
-
-
-                psmIndexService.save(psmsToIndex.values());
-                logger.info("COMMITTED " + psmsToIndex.size() +
-                        " psms from PROJECT:" + projectAccession +
-                        " ASSAY:" + assayPsms.getKey());
-            }
-
-            endTime = System.currentTimeMillis();
-            logger.info("DONE indexing all PSMs for project " + projectAccession + " in " + (double) (endTime - startTime) / 1000.0 + " seconds");
-
-        }
-    }
-
-    @Deprecated
-    private static long getTotalPsmsCount(Map<? extends String, ? extends Collection<? extends Psm>> psms) {
-        long res = 0;
-
-        for (Map.Entry<? extends String, ? extends Collection<? extends Psm>> psmEntry : psms.entrySet()) {
-            res = res + psmEntry.getValue().size();
-        }
-
-        return res;
-    }
-
-
     public void indexAllPsmsForProjectAndAssay(String projectAccession, String assayAccession, MZTabFile mzTabFile){
-        LinkedList<Psm> psms = new LinkedList<Psm>();
+        List<Psm> psms = new LinkedList<Psm>();
 
         long startTime;
         long endTime;
@@ -117,7 +38,7 @@ public class ProjectPsmsIndexer {
         // build PSMs from mzTabFiles
         try {
             if (mzTabFile != null) {
-                psms = MzTabDataProviderReader.readPsmsFromMzTabFile(projectAccession, assayAccession, mzTabFile);
+                psms = PsmMzTabBuilder.readPsmsFromMzTabFile(projectAccession, assayAccession, mzTabFile);
             }
         } catch (Exception e) { // we need to recover from any exception when reading the mzTab file so the whole process can continue
             logger.error("Cannot get psms from PROJECT:" + projectAccession + "and ASSAY:" + assayAccession );
