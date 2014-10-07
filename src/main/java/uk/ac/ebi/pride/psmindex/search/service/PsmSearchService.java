@@ -263,6 +263,13 @@ public class PsmSearchService {
         return solrPsmRepository.findByReportedIdAndAssayAccession(reportedId, assayAccession);
     }
 
+    public List<Psm> findByReportedIdAndAssayAccessionAndProteinAccessionAndPeptideSequence(
+            String reportedId,
+            String assayAccession,
+            String proteinAccession,
+            String peptideSequence) {
+        return solrPsmRepository.findByReportedIdAndAssayAccessionAndProteinAccessionAndPeptideSequence(reportedId, assayAccession, proteinAccession, peptideSequence);
+    }
     // Protein Accession query methods
     public List<Psm> findByProteinAccession(String proteinAccession) {
         return solrPsmRepository.findByProteinAccession(proteinAccession);
