@@ -51,7 +51,7 @@
         <archive.repo.version>0.1.19</archive.repo.version>
         <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
         <pride.index.utils.version>0.1.0</pride.index.utils.version>
-        <archive.utils.version>0.1.10</archive.utils.version>
+        <archive.utils.version>0.1.11</archive.utils.version>
     </properties>
 
     <build>
