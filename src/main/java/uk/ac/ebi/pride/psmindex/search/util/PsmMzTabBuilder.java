@@ -10,7 +10,6 @@ import uk.ac.ebi.pride.archive.utils.spectrum.SpectrumIdGeneratorPride3;
 import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
-import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import static uk.ac.ebi.pride.indexutils.helpers.CvParamHelper.convertToCvParamProvider;
 import static uk.ac.ebi.pride.indexutils.helpers.ModificationHelper.convertToModificationProvider;
-import static uk.ac.ebi.pride.psmindex.search.util.PsmIdBuilder.*;
+import static uk.ac.ebi.pride.psmindex.search.util.PsmIdBuilder.getId;
 
 /**
  * @author Jose A. Dianes, Noemi del Toro
@@ -195,14 +194,5 @@ public class PsmMzTabBuilder {
 
     private static String extractFileName(String filePath) {
         return FilenameUtils.getName(filePath);
-    }
-
-    private static String getCorrectedAccession(String accession, String database) {
-
-        AccessionResolver accessionResolver = new AccessionResolver(accession, null, database); // we don't have versions
-        String fixedAccession = accessionResolver.getAccession();
-
-        logger.debug("Original accession " + accession + " fixed to " + fixedAccession);
-        return (fixedAccession == null) ? accession : fixedAccession;
     }
 }

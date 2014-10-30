@@ -48,12 +48,11 @@
     </organization>
 
     <properties>
-        <archive.repo.version>0.1.18</archive.repo.version>
-        <archive.data.provider.api.version>2.0.6-SNAPSHOT</archive.data.provider.api.version>
+        <archive.repo.version>0.1.19</archive.repo.version>
+        <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
         <pride.accession.resolver.version>1.0.1</pride.accession.resolver.version>
-        <pride.index.utils.version>0.1.0-SNAPSHOT</pride.index.utils.version>
+        <pride.index.utils.version>0.1.0</pride.index.utils.version>
         <archive.utils.version>0.1.10</archive.utils.version>
-        <jmztab.version>3.0.1-SNAPSHOT</jmztab.version>
     </properties>
 
     <build>
@@ -213,19 +212,6 @@
             <version>${archive.utils.version}</version>
         </dependency>
 
-        <!-- pride utils for cleaning protein accessions -->
-        <dependency>
-            <groupId>uk.ac.ebi.pride.tools</groupId>
-            <artifactId>accession-resolver</artifactId>
-            <version>${pride.accession.resolver.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- pride index tools -->
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
@@ -234,7 +220,7 @@
         </dependency>
 
         <!-- jmzTab dependency is retrieved from the index-utils. In this way,
-            psm-index and protein-identification-index are using the same -->
+            psm-index and protein-identification-index are using the same version -->
 
         <!-- ##### 3rd party dependencies ##### ##### ##### ##### ##### -->
         <!-- spring-data solr-->
