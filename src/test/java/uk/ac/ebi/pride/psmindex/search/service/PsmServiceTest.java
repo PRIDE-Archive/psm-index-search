@@ -128,6 +128,9 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         deleteAllData();
         // insert test data
         insertTestData();
+
+        //We force the commit for testing purposes (avoids wait one minute)
+        server.commit();
     }
 
     private void deleteAllData() {

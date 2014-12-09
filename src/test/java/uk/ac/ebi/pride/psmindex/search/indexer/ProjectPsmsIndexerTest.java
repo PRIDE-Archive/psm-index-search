@@ -85,6 +85,9 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
         projectPsmsIndexer.indexAllPsmsForProjectAndAssay(PROJECT_1_ACCESSION, PROJECT_1_ASSAY_2, mzTabFileP1A2);
         projectPsmsIndexer.indexAllPsmsForProjectAndAssay(PROJECT_2_ACCESSION, PROJECT_2_ASSAY_1, mzTabFileP2A1);
 
+        //We force the commit for testing purposes (avoids wait one minute)
+        server.commit();
+
         Collection<Psm> psms = PsmSearchService.findByAssayAccession(PROJECT_1_ASSAY_1);
         assertEquals(NUM_PSMS_P1A1, psms.size());
         psms = PsmSearchService.findByAssayAccession(PROJECT_1_ASSAY_2);
@@ -111,6 +114,8 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
         projectPsmsIndexer.indexAllPsmsForProjectAndAssay(PROJECT_1_ACCESSION, PROJECT_1_ASSAY_1, mzTabFileP1A1);
         projectPsmsIndexer.indexAllPsmsForProjectAndAssay(PROJECT_1_ACCESSION, PROJECT_1_ASSAY_2, mzTabFileP1A2);
 
+        //We force the commit for testing purposes (avoids wait one minute)
+        server.commit();
 
         Collection<Psm> psms = PsmSearchService.findByAssayAccession(PROJECT_1_ASSAY_1);
         assertEquals(NUM_PSMS_P1A1, psms.size());

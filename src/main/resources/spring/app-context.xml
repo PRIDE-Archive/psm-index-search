@@ -48,7 +48,6 @@
         <constructor-arg value="${submissions.directory}"/>
     </bean>
 
-    <context:component-scan base-package="uk.ac.ebi.pride.psmindex.search.tools"/>
     <jpa:repositories base-package="uk.ac.ebi.pride.archive.repo"/>
 
     <bean id="solrPsmServer" class="org.apache.solr.client.solrj.impl.HttpSolrServer">

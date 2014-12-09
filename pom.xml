@@ -50,7 +50,7 @@
     <properties>
         <archive.repo.version>0.1.19</archive.repo.version>
         <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
-        <pride.index.utils.version>0.1.0</pride.index.utils.version>
+        <pride.index.utils.version>0.1.1-SNAPSHOT</pride.index.utils.version>
         <archive.utils.version>0.1.11</archive.utils.version>
     </properties>
 
@@ -257,6 +257,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <!-- Guava for partitioning -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>16.0</version>
         </dependency>
 
     </dependencies>
