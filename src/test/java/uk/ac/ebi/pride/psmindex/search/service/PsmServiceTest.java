@@ -307,7 +307,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     }
 
     @Test
-    public void testSearchByPeptideSequenceAndProjectAccessions(){
+    public void testSearchByPeptideSubSequenceAndProjectAccessions(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequenceAndProjectAccession(PSM_3_SEQUENCE, PROJECT_2_ACCESSION);
@@ -320,9 +320,31 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
         }
 
     }
+    @Test
+    public void testSearchByPeptideSequenceAndProjectAccessions(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByPeptideSequenceAndProjectAccession(PSM_3_SEQUENCE, PROJECT_2_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        for (Psm psm : psms) {
+            assertTrue(psm.getId().contentEquals(PSM_3_ID) || psm.getId().contentEquals(PSM_2_ID));
+        }
+
+    }
+    @Test
+    public void testCountByPeptideSequenceAndProjectAccessions(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        long count = psmSearchService.countByPeptideSequenceAndProjectAccession("YSQPEDSLIP*", PROJECT_2_ACCESSION);
+
+        assertEquals(2, count);
+    }
 
     @Test
-    public void testSearchByPeptideSequenceAndAssaysAccession(){
+    public void testSearchByPeptideSubSequenceAndAssaysAccession(){
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
         List<Psm> psms = psmSearchService.findByPeptideSubSequenceAndAssayAccession(PSM_3_SEQUENCE, ASSAY_2_ACCESSION);
@@ -334,6 +356,28 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
             assertTrue(PSM_3_ID.equals(psm.getId()) || PSM_2_ID.equals(psm.getId()));
         }
 
+    }
+    @Test
+    public void testSearchByPeptideSequenceAndAssaysAccession(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        List<Psm> psms = psmSearchService.findByPeptideSequenceAndAssayAccession(PSM_3_SEQUENCE, ASSAY_2_ACCESSION);
+
+        assertNotNull(psms);
+        assertEquals(1, psms.size());
+
+        for (Psm psm : psms) {
+            assertTrue(PSM_3_ID.equals(psm.getId()) || PSM_2_ID.equals(psm.getId()));
+        }
+
+    }
+    @Test
+    public void testCountByPeptideSequenceAndAssaysAccession(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        long count = psmSearchService.countByPeptideSequenceAndAssayAccession("YSQPEDSLIP*", ASSAY_2_ACCESSION);
+
+        assertEquals(2, count);
     }
 
     @Test
@@ -349,6 +393,14 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
             assertTrue(psm.getId().contentEquals(PSM_3_ID) || psm.getId().contentEquals(PSM_2_ID));
         }
 
+    }
+    @Test
+    public void testCountByProjectAccession(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        long count = psmSearchService.countByProjectAccession(PROJECT_2_ACCESSION);
+
+        assertEquals(2, count);
     }
 
     @Test
@@ -381,6 +433,14 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
             assertTrue(psm.getId().contentEquals(PSM_3_ID) || psm.getId().contentEquals(PSM_2_ID));
         }
 
+    }
+    @Test
+    public void testCountByAssaysAccession(){
+        PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
+
+        long count = psmSearchService.countByAssayAccession(ASSAY_2_ACCESSION);
+
+        assertEquals(2, count);
     }
 
     @Test

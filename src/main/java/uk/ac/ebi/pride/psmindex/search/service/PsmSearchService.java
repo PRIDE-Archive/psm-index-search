@@ -69,7 +69,8 @@ public class PsmSearchService {
         return solrPsmRepository.findByPeptideSequenceAndProjectAccessions(peptideSequence,projectAccession);
     }
     public Long countByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
-        return solrPsmRepository.countByPeptideSequenceAndProjectAccession(peptideSequence,projectAccession);
+        Page<Psm> result = solrPsmRepository.findByPeptideSequenceAndProjectAccession(peptideSequence, projectAccession, new PageRequest(0,1));
+        return result.getTotalElements();
     }
 
     public List<Psm> findByPeptideSubSequenceAndProjectAccession(String peptideSequence, String projectAccession) {
@@ -80,7 +81,8 @@ public class PsmSearchService {
         return solrPsmRepository.findByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession);
     }
     public Long countByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession) {
-        return solrPsmRepository.countByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession);
+        Page<Psm> result = solrPsmRepository.findByPeptideSequenceAndAssayAccession(peptideSequence, assayAccession, new PageRequest(0,1));
+        return result.getTotalElements();
     }
 
     public List<Psm> findByPeptideSubSequenceAndAssayAccession(String peptideSequence, String assayAccession) {

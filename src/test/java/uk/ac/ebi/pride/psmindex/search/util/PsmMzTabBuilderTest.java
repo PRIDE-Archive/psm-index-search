@@ -134,7 +134,7 @@ public class PsmMzTabBuilderTest {
         assertEquals("MS", cvParamProvider.getCvLabel());
         assertEquals("MS:1001207", cvParamProvider.getAccession());
         assertEquals("Mascot", cvParamProvider.getName());
-        assertEquals(null, cvParamProvider.getValue());
+        assertEquals("", cvParamProvider.getValue());
     }
 
     private void checkSearchEnginesScores(Iterable<CvParamProvider> searchEngineScores) {

@@ -37,19 +37,30 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     List<Psm> findByPeptideSequence(String peptideSequence);
     @Query("peptide_sequence:?0")
     Page<Psm> findByPeptideSequence(String peptideSequence, Pageable pageable);
+
+    @Deprecated
     @Query("peptide_sequence:?0 AND project_accession:?1")
     List<Psm> findByPeptideSequenceAndProjectAccessions(String peptideSequence, String projectAccession);
-    @Query("peptide_sequence:?0 AND project_accession:?1")
+    // count queries don't work well with wildcards, therefore we use the generic pages approach and for counts
+    // retrieve the total number from the page object
+    @Query(value = "peptide_sequence:?0 AND project_accession:?1")
+    Page<Psm> findByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession, Pageable pageable);
+    @Deprecated
     Long countByPeptideSequenceAndProjectAccession(String peptideSequence, String projectAccession);
+
+    @Deprecated
     @Query("peptide_sequence:?0 AND assay_accession:?1")
     List<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession);
     @Query("peptide_sequence:?0 AND assay_accession:?1")
+    Page<Psm> findByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession, Pageable pageable);
+    @Deprecated
     Long countByPeptideSequenceAndAssayAccession(String peptideSequence, String assayAccession);
 
     // Project accession query methods
     @Query("project_accession:?0")
     List<Psm> findByProjectAccession(String projectAccession);
-    @Query("project_accession:?0")
+    // Note: wildcard queries are not supported for accession queries, therefore we don't have issues with this count method
+    // (accessions will be used as provided for a security check and rejected if they don't exist, e.g. have a wildcard)
     Long countByProjectAccession(String projectAccession);
     @Query("project_accession:(?0)")
     List<Psm> findByProjectAccessionIn(Collection<String> projectAccessions);
@@ -116,7 +127,8 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
     // Assay accession query methods
     @Query("assay_accession:?0")
     List<Psm> findByAssayAccession(String assayAccession);
-    @Query("assay_accession:?0")
+    // Note: wildcard queries are not supported for accession queries, therefore we don't have issues with this count method
+    // (accessions will be used as provided for a security check and rejected if they don't exist, e.g. have a wildcard)
     Long countByAssayAccession(String assayAccession);
     @Query("assay_accession:(?0)")
     List<Psm> findByAssayAccessionIn(Collection<String> assayAccessions);
