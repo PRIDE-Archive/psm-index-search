@@ -10,7 +10,7 @@
     <groupId>uk.ac.ebi.pride</groupId>
     <artifactId>psm-index-search</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.8-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>psm-index-search</name>
 
     <!--
@@ -238,7 +238,7 @@
         <connection>scm:git:https://github.com/PRIDE-Archive/psm-index-service.git</connection>
         <developerConnection>scm:git:https://github.com/PRIDE-Archive/psm-index-service.git</developerConnection>
         <url>scm:git:https://github.com/PRIDE-Archive/psm-index-service.git</url>
-        <tag>HEAD</tag>
+        <tag>psm-index-search-1.0.0</tag>
     </scm>
 
 </project>
