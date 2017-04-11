@@ -99,33 +99,11 @@
 
         <!-- identifier for each document: the psm accession -->
         <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
-        <field name="reported_id" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="peptide_sequence" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
-        <field name="spectrum_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="database" type="text_general" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="database_version" type="text_general" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="assay_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-
-        <field name="modifications" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
         <field name="mod_names" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="mod_names_as_text" type="text_general" indexed="true" stored="false" required="false" multiValued="true"/>
-        <field name="mod_accessions" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="mod_accessions_as_text" type="text_general" indexed="true" stored="false" required="false" multiValued="true"/>
-        <field name="mod_synonyms" type="text_synonym" indexed="true" stored="false" required="false" multiValued="true"/>
-
-        <field name="unique" type="boolean" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="search_engine" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="search_engine_score" type="text_general" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="retention_time" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="charge" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="exp_mass_to_charge" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="calc_mass_to_charge" type="double" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="pre_amino_acid" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="post_amino_acid" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="start_position" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
-        <field name="end_position" type="int" indexed="true" stored="true" required="false" multiValued="false"/>
 
 
         <!-- catchall field, containing all other searchable text fields (implemented
@@ -229,11 +207,7 @@
     <copyField source="protein_accession" dest="text" />
     <copyField source="project_accession" dest="text" />
     <copyField source="assay_accession" dest="text" />
-    <copyField source="modifications" dest="text" />
     <copyField source="mod_names" dest="text" />
-    <copyField source="mod_accessions" dest="mod_accessions_as_text" />
-    <copyField source="mod_accessions" dest="mod_synonyms" />
-    <copyField source="mod_names" dest="mod_names_as_text" />
 
     <!-- Above, multiple source fields are copied to the [text] field.
        Another way to map multiple source fields to the same

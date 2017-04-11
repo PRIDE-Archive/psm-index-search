@@ -125,8 +125,6 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
         psms = PsmSearchService.findByAssayAccession(PROJECT_1_ASSAY_2);
         assertEquals(NUM_PSMS_P1A2, psms.size());
 
-        psms = PsmSearchService.findByReportedId(PSM3_ID);
-        assertEquals(1, psms.size());
 
         // delete
         projectPsmsIndexer.deleteAllPsmsForProject(PROJECT_1_ACCESSION);
@@ -138,9 +136,5 @@ public class ProjectPsmsIndexerTest extends SolrTestCaseJ4 {
 
         psms = PsmSearchService.findByProjectAccession(PROJECT_1_ACCESSION);
         assertEquals(0, psms.size());
-
-        psms = PsmSearchService.findByReportedId(PSM3_ID);
-        assertEquals(0, psms.size());
-
     }
 }

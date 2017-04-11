@@ -71,7 +71,7 @@ public class PsmMzTabBuilderTest {
 
         for (Map.Entry<String, List<Psm>> stringLinkedListEntry : psms.entrySet()) {
             for (Psm psm : stringLinkedListEntry.getValue()) {
-                assertTrue(psm.getSpectrumId().startsWith(PROJECT_1_ACCESSION + FILE_PRE + stringLinkedListEntry.getKey() + FILE_POST));
+                assertTrue(psm.getId().startsWith(PROJECT_1_ACCESSION + "_"));
             }
         }
     }
@@ -86,23 +86,7 @@ public class PsmMzTabBuilderTest {
         Psm firstPsm = psms.entrySet().iterator().next().getValue().get(0);
 
         assertEquals("TST000121_00001_175_orf19/5636_QSTSSTPCPYWDTGCLCVMPQFAGAVGNCVAK", firstPsm.getId());
-        assertEquals("175", firstPsm.getReportedId());
-        assertEquals("TST000121;result_1_sample_1_dat.pride.xml;spectrum=175", firstPsm.getSpectrumId());
         assertEquals("orf19/5636", firstPsm.getProteinAccession());
-        assertNull(firstPsm.isUnique());
-
-        checkSearchEnginesScores(firstPsm.getSearchEngineScores());
-        checkSearchEngine(firstPsm.getSearchEngines());
-        checkModifications(firstPsm.getModifications());
-
-        assertNull(firstPsm.getRetentionTime());
-        assertNull(firstPsm.getCharge());
-        assertEquals(1183.8615, firstPsm.getExpMassToCharge());
-        assertNull(firstPsm.getCalculatedMassToCharge());
-        assertNull(firstPsm.getPreAminoAcid());
-        assertNull(firstPsm.getPostAminoAcid());
-        assertEquals((Integer) 61, firstPsm.getStartPosition());
-        assertEquals((Integer) 92, firstPsm.getEndPosition());
     }
 
     private void checkModifications(Iterable<ModificationProvider> modifications) {
