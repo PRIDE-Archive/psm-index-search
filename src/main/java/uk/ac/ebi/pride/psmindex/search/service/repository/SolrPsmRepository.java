@@ -154,11 +154,11 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
   @Query("protein_accession:?0")
   List<Psm> findByProteinAccession(String proteinAccession);
   @Query("protein_accession:?0 AND project_accession:?1")
-  List<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession);
+  Page<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession, Pageable pageable);
   @Query("protein_accession:?0 AND assay_accession:?1")
-  List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession);
+  Page<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession, Pageable pageable);
 
   //Projection for peptide sequence
   @Query(fields = {"peptide_sequence"})
-  List<Psm> findPeptideSequencesByProjectAccession(String projectAccession);
+  Page<Psm> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable);
 }

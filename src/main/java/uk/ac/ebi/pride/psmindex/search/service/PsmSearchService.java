@@ -202,27 +202,17 @@ public class PsmSearchService {
         return solrPsmRepository.findByProteinAccession(proteinAccession);
     }
 
-    public List<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession) {
-        return solrPsmRepository.findByProteinAccessionAndProjectAccession(proteinAccession, projectAccession);
+    public Page<Psm> findByProteinAccessionAndProjectAccession(String proteinAccession, String projectAccession, Pageable pageable) {
+        return solrPsmRepository.findByProteinAccessionAndProjectAccession(proteinAccession, projectAccession, pageable);
     }
 
-    public List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession) {
-        return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession);
+    public Page<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession, Pageable pageable) {
+        return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession, pageable);
     }
 
     //Projection for peptide sequence
-    public List<String> findPeptideSequencesByProjectAccession(String projectAccession) {
-
-        List<String> peptideSequences = new ArrayList<String>();
-        List<Psm> psms = solrPsmRepository.findPeptideSequencesByProjectAccession(projectAccession);
-
-        if (psms != null) {
-            for (Psm psm : psms) {
-                peptideSequences.add(psm.getPeptideSequence());
-            }
-        }
-
-        return peptideSequences;
+    public Page<Psm> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable) {
+        return solrPsmRepository.findPeptideSequencesByProjectAccession(projectAccession, pageable);
     }
 
     /**

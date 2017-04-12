@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.data.solr.core.query.result.FacetPivotFieldEntry;
@@ -376,7 +377,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     public void testSearchByProteinAccessionAndProjectAccessions() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
-        List<Psm> psms = psmSearchService.findByProteinAccessionAndProjectAccession(PROTEIN_1_ACCESSION, PROJECT_1_ACCESSION);
+        List<Psm> psms = psmSearchService.findByProteinAccessionAndProjectAccession(PROTEIN_1_ACCESSION, PROJECT_1_ACCESSION, new PageRequest(0,10)).getContent();
 
         assertNotNull(psms);
         assertEquals(1, psms.size());
@@ -389,7 +390,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     public void testSearchByProteinAccessionAndAssaysAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
 
-        List<Psm> psms = psmSearchService.findByProteinAccessionAndAssayAccession(PROTEIN_1_ACCESSION, ASSAY_1_ACCESSION);
+        List<Psm> psms = psmSearchService.findByProteinAccessionAndAssayAccession(PROTEIN_1_ACCESSION, ASSAY_1_ACCESSION, new PageRequest(0,10)).getContent();
 
         assertNotNull(psms);
         assertEquals(1, psms.size());
@@ -402,13 +403,13 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
     @Test
     public void testPeptideSequencesProjectionByProjectAccession() {
         PsmSearchService psmSearchService = new PsmSearchService(solrPsmRepositoryFactory.create());
-
-        List<String> peptideSequences = psmSearchService.findPeptideSequencesByProjectAccession(PROJECT_1_ACCESSION);
+        List<Psm> peptideSequences = psmSearchService.findPeptideSequencesByProjectAccession(PROJECT_1_ACCESSION,
+            new PageRequest(0, 100, Sort.Direction.ASC, "peptide_sequence", "id")).getContent();
 
         assertNotNull(peptideSequences);
         assertEquals(1, peptideSequences.size());
 
-        String sequence1 = peptideSequences.get(0);
+        String sequence1 = peptideSequences.get(0).getPeptideSequence();
         assertEquals(PSM_1_SEQUENCE, sequence1);
 
     }
