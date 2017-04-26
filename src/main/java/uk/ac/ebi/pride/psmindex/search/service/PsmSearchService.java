@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.psmindex.search.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
@@ -12,6 +13,7 @@ import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Jose A. Dianes
@@ -211,8 +213,10 @@ public class PsmSearchService {
     }
 
     //Projection for peptide sequence
-    public Page<Psm> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable) {
-        return solrPsmRepository.findPeptideSequencesByProjectAccession(projectAccession, pageable);
+    public Page<String> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable) {
+        Page<Psm> page = solrPsmRepository.findByProjectAccession(projectAccession, pageable);
+        List<String> results = page.getContent().stream().map(Psm::getPeptideSequence).collect(Collectors.toList());
+        return new PageImpl<>(results);
     }
 
     /**
@@ -268,27 +272,6 @@ public class PsmSearchService {
             psms = new PageWrapper<Psm>(solrPsmRepository.findByAssayAccessionHighlightsAndFilterModNames(assayAccession, term, modNameFilters, pageable));
         }
 
-        return psms;
-    }
-
-    /**
-     * Return filtered psms (or not) by modifications synonyms with the highlights for peptide_sequence and protein_sequence
-     * @param assayAccession mandatory
-     * @param term optional
-     * @param modSynonymFilters optional
-     * @param pageable requested page
-     * @return A page with the psms and the highlights snippets
-     */
-    public PageWrapper<Psm> findByAssayAccessionHighlightsOnModificationSynonyms(
-        String assayAccession, String term, List<String> modSynonymFilters, Pageable pageable) {
-        PageWrapper<Psm> psms;
-        if ((term == null || term.isEmpty()) && (modSynonymFilters == null || modSynonymFilters.isEmpty())) {
-            psms = new PageWrapper<Psm>(solrPsmRepository.findByAssayAccession(assayAccession, pageable));
-        } else if ((term != null && !term.isEmpty()) && modSynonymFilters == null || modSynonymFilters.isEmpty()) {
-            psms = new PageWrapper<Psm>(solrPsmRepository.findByAssayAccessionHighlights(assayAccession, term, pageable));
-        } else {
-            psms = new PageWrapper<Psm>(solrPsmRepository.findByAssayAccessionHighlightsAndFilterModSynonyms(assayAccession, term, modSynonymFilters, pageable));
-        }
         return psms;
     }
 }

@@ -129,8 +129,6 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
   @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_names:(?2)", defaultOperator = AND)
   HighlightPage<Psm> findByAssayAccessionHighlightsAndFilterModNames(String assayAccession, String term, List<String> modNames, Pageable pageable);
   @Highlight(prefix = HIGHLIGHT_PRE_FRAGMENT, postfix = HIGHLIGHT_POST_FRAGMENT, fields = {"peptide_sequence, protein_accession"})
-  @Query(value = "assay_accession:?0 AND (peptide_sequence:?1 OR protein_accession:?1)", filters = "mod_synonyms:(?2)", defaultOperator = AND)
-  HighlightPage<Psm>findByAssayAccessionHighlightsAndFilterModSynonyms(String assayAccession, String term, List<String> modSynonyms, Pageable pageable);
 
   //Faceting
   //Mod names
@@ -159,6 +157,6 @@ public interface SolrPsmRepository extends SolrCrudRepository<Psm, String> {
   Page<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession, Pageable pageable);
 
   //Projection for peptide sequence
-  @Query(fields = {"peptide_sequence"})
-  Page<Psm> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable);
+  @Query(fields = {"project_accession:?0"})
+  Page<String> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable);
 }
