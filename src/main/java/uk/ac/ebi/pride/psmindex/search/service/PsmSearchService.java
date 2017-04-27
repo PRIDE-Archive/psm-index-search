@@ -13,7 +13,6 @@ import uk.ac.ebi.pride.psmindex.search.model.PsmFields;
 import uk.ac.ebi.pride.psmindex.search.service.repository.SolrPsmRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Jose A. Dianes
@@ -208,14 +207,28 @@ public class PsmSearchService {
         return solrPsmRepository.findByProteinAccessionAndProjectAccession(proteinAccession, projectAccession, pageable);
     }
 
+    public List<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession) {
+        return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession);
+    }
+
     public Page<Psm> findByProteinAccessionAndAssayAccession(String proteinAccession, String assayAccession, Pageable pageable) {
         return solrPsmRepository.findByProteinAccessionAndAssayAccession(proteinAccession, assayAccession, pageable);
     }
 
+    public List<Psm> findByReportedIdAndAssayAccessionAndProteinAccessionAndPeptideSequence(String reportedId,
+                                                                                            String assayAccession,
+                                                                                            String proteinAccession,
+                                                                                            String peptideSequence) {
+        return solrPsmRepository.findByReportedIdAndAssayAccessionAndProteinAccessionAndPeptideSequence(reportedId,
+            assayAccession, proteinAccession, peptideSequence);
+    }
     //Projection for peptide sequence
     public Page<String> findPeptideSequencesByProjectAccession(String projectAccession, Pageable pageable) {
         Page<Psm> page = solrPsmRepository.findByProjectAccession(projectAccession, pageable);
-        List<String> results = page.getContent().stream().map(Psm::getPeptideSequence).collect(Collectors.toList());
+        List<String> results = new ArrayList<>();
+        for (Psm psm :  page.getContent()) {
+            results.add(psm.getPeptideSequence());
+        }
         return new PageImpl<>(results);
     }
 

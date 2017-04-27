@@ -486,6 +486,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
   private void addPsm_1() {
     Psm psm = new Psm();
     psm.setId(PSM_1_ID);
+    psm.setReportedId(PSM_1_REPORTED_ID);
     psm.setPeptideSequence(PSM_1_SEQUENCE);
     psm.setProteinAccession(PROTEIN_1_ACCESSION);
     psm.setProjectAccession(PROJECT_1_ACCESSION);
@@ -509,6 +510,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
   private void addPsm_2() {
     Psm psm = new Psm();
     psm.setId(PSM_2_ID);
+    psm.setReportedId(PSM_2_REPORTED_ID);
     psm.setPeptideSequence(PSM_2_SEQUENCE);
     psm.setProteinAccession(PROTEIN_2_ACCESSION);
     psm.setProjectAccession(PROJECT_2_ACCESSION);
@@ -532,6 +534,7 @@ public class PsmServiceTest extends SolrTestCaseJ4 {
   private void addPsm_3() {
     Psm psm = new Psm();
     psm.setId(PSM_3_ID);
+    psm.setReportedId(PSM_3_REPORTED_ID);
     psm.setPeptideSequence(PSM_3_SEQUENCE);
     psm.setProteinAccession(PROTEIN_2_ACCESSION);
     psm.setProjectAccession(PROJECT_2_ACCESSION);

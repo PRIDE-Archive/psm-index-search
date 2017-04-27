@@ -15,6 +15,9 @@ public class Psm implements PeptideSequenceProvider {
   @Field(PsmFields.ID)
   private String id;
 
+  @Field(PsmFields.REPORTED_ID)
+  private String reportedId;
+
   @Field(PsmFields.PEPTIDE_SEQUENCE)
   private String peptideSequence;
 
@@ -39,6 +42,13 @@ public class Psm implements PeptideSequenceProvider {
     this.id = id;
   }
 
+  public String getReportedId() {
+    return reportedId;
+  }
+
+  public void setReportedId(String reportedId) {
+    this.reportedId = reportedId;
+  }
 
   public String getPeptideSequence() {
     return peptideSequence;

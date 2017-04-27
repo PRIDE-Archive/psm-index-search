@@ -99,6 +99,7 @@
 
         <!-- identifier for each document: the psm accession -->
         <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+        <field name="reported_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="peptide_sequence" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
@@ -203,15 +204,13 @@
           or to add multiple fields to the same field for easier/faster searching.  -->
 
     <copyField source="id" dest="text" />
+    <copyField source="reported_id" dest="text" />
     <copyField source="peptide_sequence" dest="text" />
     <copyField source="protein_accession" dest="text" />
     <copyField source="project_accession" dest="text" />
     <copyField source="assay_accession" dest="text" />
     <copyField source="modifications" dest="text" />
     <copyField source="mod_names" dest="text" />
-    <copyField source="mod_accessions" dest="mod_accessions_as_text" />
-    <copyField source="mod_accessions" dest="mod_synonyms" />
-    <copyField source="mod_names" dest="mod_names_as_text" />
 
     <!-- Above, multiple source fields are copied to the [text] field.
        Another way to map multiple source fields to the same

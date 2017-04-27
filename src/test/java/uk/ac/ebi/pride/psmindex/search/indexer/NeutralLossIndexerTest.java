@@ -95,6 +95,7 @@ public class NeutralLossIndexerTest extends SolrTestCaseJ4 {
     Psm psm = new Psm();
 
     psm.setId(PSM_3_ID);
+    psm.setReportedId(PSM_3_REPORTED_ID);
     psm.setPeptideSequence(PSM_3_SEQUENCE);
     psm.setProteinAccession(PROTEIN_2_ACCESSION);
     psm.setProjectAccession(PROJECT_2_ACCESSION);
@@ -130,6 +131,7 @@ public class NeutralLossIndexerTest extends SolrTestCaseJ4 {
     Psm psm = new Psm();
 
     psm.setId(PSM_3_ID);
+    psm.setReportedId(PSM_3_REPORTED_ID);
     psm.setPeptideSequence(PSM_3_SEQUENCE);
     psm.setProteinAccession(PROTEIN_2_ACCESSION);
     psm.setProjectAccession(PROJECT_2_ACCESSION);
