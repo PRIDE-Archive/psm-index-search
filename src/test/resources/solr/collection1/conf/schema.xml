@@ -99,6 +99,7 @@
 
         <!-- identifier for each document: the psm accession -->
         <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+        <field name="reported_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="peptide_sequence" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
         <field name="protein_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
         <field name="project_accession" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
@@ -203,6 +204,7 @@
           or to add multiple fields to the same field for easier/faster searching.  -->
 
     <copyField source="id" dest="text" />
+    <copyField source="reported_id" dest="text" />
     <copyField source="peptide_sequence" dest="text" />
     <copyField source="protein_accession" dest="text" />
     <copyField source="project_accession" dest="text" />
