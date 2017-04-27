@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.psmindex.search.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.pride.archive.dataprovider.identification.ModificationProvider;
 import uk.ac.ebi.pride.jmztab.model.*;
 import uk.ac.ebi.pride.jmztab.utils.errors.MZTabException;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
@@ -39,11 +40,12 @@ public class PsmMzTabBuilder {
       String cleanPepSequence = PsmSequenceCleaner.cleanPeptideSequence(mzTabPsm.getSequence());
       Psm newPsm = new Psm();
       newPsm.setId(getId(projectAccession, assayAccession, mzTabPsm.getPSM_ID(), mzTabPsm.getAccession(), cleanPepSequence));
+      newPsm.setReportedId(mzTabPsm.getPSM_ID());
       newPsm.setPeptideSequence(cleanPepSequence);
       newPsm.setProjectAccession(projectAccession);
       newPsm.setAssayAccession(assayAccession);
       newPsm.setProteinAccession(mzTabPsm.getAccession());
-      newPsm.setModificationNames(new LinkedList<>());
+      newPsm.setModificationNames(new LinkedList<ModificationProvider>());
       if (mzTabPsm.getModifications() != null && mzTabPsm.getModifications().size()>0) {
         for (Modification mod : mzTabPsm.getModifications()) { // Using the writer for the library
           newPsm.addModificationNames(convertToModificationProvider(mod));
