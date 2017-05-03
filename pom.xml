@@ -26,10 +26,11 @@
     -->
 
     <properties>
-        <archive.repo.version>0.1.19</archive.repo.version>
+        <java.version>1.7</java.version>
+        <archive.repo.version>1.0.0</archive.repo.version>
         <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
         <pride.index.utils.version>1.0.0</pride.index.utils.version>
-        <archive.utils.version>0.1.11</archive.utils.version>
+        <archive.utils.version>0.1.21</archive.utils.version>
     </properties>
 
     <build>
