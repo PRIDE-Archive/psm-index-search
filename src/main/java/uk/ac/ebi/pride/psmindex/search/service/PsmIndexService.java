@@ -84,17 +84,8 @@ public class PsmIndexService {
               logger.error("Re-trying in " + SECONDS_TO_WAIT + " seconds...");
               waitSecs();
             }
-          } catch (SolrServerException e) {
-            logger.error("[TRY " + numTries + "] There are server problems: " + e.getCause());
-            logger.error("Re-trying in " + SECONDS_TO_WAIT + " seconds...");
-            waitSecs();
-          } catch (UncategorizedSolrException e) {
-            logger.error("[TRY " + numTries + "] There are server problems: " + e.getCause());
-            logger.error("Re-trying in " + SECONDS_TO_WAIT + " seconds...");
-            waitSecs();
           } catch (Exception e) {
-            logger.error("[TRY " + numTries + "] There are UNKNOWN problems: " + e.getCause());
-            e.printStackTrace();
+            logger.error("[TRY " + numTries + "] There are server problems: " + e.getCause());
             logger.error("Re-trying in " + SECONDS_TO_WAIT + " seconds...");
             waitSecs();
           }
