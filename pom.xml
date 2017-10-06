@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>uk.ac.ebi.pride.architectural</groupId>
-        <artifactId>pride-core</artifactId>
-        <version>1.0.1</version>
-    </parent>
-
     <groupId>uk.ac.ebi.pride</groupId>
     <artifactId>psm-index-search</artifactId>
     <packaging>jar</packaging>
     <version>1.0.2-SNAPSHOT</version>
     <name>psm-index-search</name>
+
+    <parent>
+        <groupId>uk.ac.ebi.pride.architectural</groupId>
+        <artifactId>pride-core</artifactId>
+        <version>1.0.1</version>
+    </parent>
 
     <!--
         To build the project use:
@@ -27,10 +27,10 @@
 
     <properties>
         <java.version>1.7</java.version>
-        <archive.repo.version>1.0.0</archive.repo.version>
-        <archive.data.provider.api.version>2.0.6</archive.data.provider.api.version>
-        <pride.index.utils.version>1.0.0</pride.index.utils.version>
-        <archive.utils.version>0.1.21</archive.utils.version>
+        <archive.repo.version>1.0.1</archive.repo.version>
+        <archive.data.provider.api.version>2.0.11</archive.data.provider.api.version>
+        <pride.index.utils.version>1.0.1</pride.index.utils.version>
+        <archive.utils.version>0.1.22</archive.utils.version>
     </properties>
 
     <build>
