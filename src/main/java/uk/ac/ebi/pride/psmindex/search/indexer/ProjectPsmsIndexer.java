@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.psmindex.search.indexer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.psmindex.search.model.Psm;
 import uk.ac.ebi.pride.psmindex.search.service.PsmIndexService;
@@ -63,11 +64,19 @@ public class ProjectPsmsIndexer {
   }
 
   public void deleteAllPsmsForProject(String projectAccession) {
-
-    // search by project accession
-    List<Psm> psms = this.psmSearchService.findByProjectAccession(projectAccession);
-    this.psmIndexService.delete(psms);
-
+    int MAX_PAGE_SIZE = 1000;
+    long proteinCount = psmSearchService.countByProjectAccession(projectAccession);
+    List<Psm> initialProteinsFound;
+    while (0 < proteinCount) {
+      for (int i = 0; i < (proteinCount / MAX_PAGE_SIZE) + 1; i++) {
+        initialProteinsFound =
+            psmSearchService
+                .findByProjectAccession(projectAccession, new PageRequest(i, MAX_PAGE_SIZE))
+                .getContent();
+        psmIndexService.delete(initialProteinsFound);
+      }
+      proteinCount = psmSearchService.countByProjectAccession(projectAccession);
+    }
   }
 
 }
