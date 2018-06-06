@@ -102,12 +102,10 @@ public class PsmIndexService {
     }
   }
 
-  @Transactional
   public void delete(Psm psm) {
     solrPsmRepository.delete(psm);
   }
 
-  @Transactional
   public void delete(Iterable<Psm> psms) {
     if (psms == null || !psms.iterator().hasNext())
       logger.info("No PSMS to delete");
@@ -116,7 +114,6 @@ public class PsmIndexService {
     }
   }
 
-  @Transactional
   public void deleteAll() {
     solrPsmRepository.deleteAll();
   }

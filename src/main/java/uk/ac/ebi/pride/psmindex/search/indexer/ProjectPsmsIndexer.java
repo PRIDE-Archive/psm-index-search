@@ -64,18 +64,21 @@ public class ProjectPsmsIndexer {
   }
 
   public void deleteAllPsmsForProject(String projectAccession) {
-    int MAX_PAGE_SIZE = 1000;
-    long proteinCount = psmSearchService.countByProjectAccession(projectAccession);
+    logger.info("Starting to delete PSMs");
+    int MAX_PAGE_SIZE = 2000;
+    long psmCount = psmSearchService.countByProjectAccession(projectAccession);
     List<Psm> initialProteinsFound;
-    while (0 < proteinCount) {
-      for (int i = 0; i < (proteinCount / MAX_PAGE_SIZE) + 1; i++) {
+    logger.info("Found " + psmCount + " psms to delete");
+    if (0 < psmCount) {
+      for (int i = 0; i < (psmCount / MAX_PAGE_SIZE) + 1; i++) {
         initialProteinsFound =
             psmSearchService
                 .findByProjectAccession(projectAccession, new PageRequest(i, MAX_PAGE_SIZE))
                 .getContent();
+        logger.info("Deleting psm page: " + i + " of " + (psmCount / MAX_PAGE_SIZE));
         psmIndexService.delete(initialProteinsFound);
       }
-      proteinCount = psmSearchService.countByProjectAccession(projectAccession);
+      logger.info("Finished deleting all psm pages.");
     }
   }
 
